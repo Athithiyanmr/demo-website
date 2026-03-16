@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NREDCAP AI Land Allocation Platform – Anantapur</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --bg: #0f172a; --bg2: #1e293b; --bg3: #0a1628;
+  --accent: #38bdf8; --accent2: #0ea5e9; --green: #22c55e;
+  --yellow: #eab308; --red: #ef4444; --orange: #f97316;
+  --text: #f1f5f9; --muted: #94a3b8; --border: #334155;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+.navbar { background:var(--bg3); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; height:56px; flex-shrink:0; z-index:1000; }
+.nav-brand { display:flex; align-items:center; gap:12px; }
+.nav-logo { width:36px; height:36px; background:var(--accent); border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; color:#0f172a; }
+.nav-title { font-size:15px; font-weight:600; color:var(--text); }
+.nav-subtitle { font-size:11px; color:var(--muted); }
+.nav-tabs { display:flex; gap:4px; }
+.nav-tab { padding:6px 18px; border-radius:6px; cursor:pointer; font-size:13px; font-weight:500; border:none; background:transparent; color:var(--muted); transition:all 0.2s; }
+.nav-tab.active { background:var(--accent); color:#0f172a; }
+.nav-tab:hover:not(.active) { background:var(--bg2); color:var(--text); }
+.nav-right { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted); }
+.badge { background:var(--green); color:#fff; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; }
+.main { display:flex; flex:1; overflow:hidden; }
+.sidebar { width:340px; flex-shrink:0; background:var(--bg2); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; }
+.sidebar-header { padding:16px; border-bottom:1px solid var(--border); }
+.sidebar-header h3 { font-size:14px; color:var(--accent); font-weight:600; margin-bottom:4px; }
+.sidebar-header p { font-size:11px; color:var(--muted); }
+.sidebar-body { flex:1; overflow-y:auto; padding:16px; }
+.sidebar-body::-webkit-scrollbar { width:4px; }
+.sidebar-body::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+.form-group { margin-bottom:14px; }
+.form-label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; display:block; }
+.form-control { width:100%; padding:9px 12px; background:var(--bg); border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:13px; outline:none; transition:border 0.2s; }
+.form-control:focus { border-color:var(--accent); }
+.form-control option { background:var(--bg2); }
+.btn { padding:10px 20px; border-radius:6px; border:none; cursor:pointer; font-size:13px; font-weight:600; transition:all 0.2s; width:100%; }
+.btn-primary { background:var(--accent); color:#0f172a; }
+.btn-primary:hover { background:var(--accent2); }
+.btn-secondary { background:var(--bg); border:1px solid var(--border); color:var(--text); margin-top:8px; }
+.btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
+.score-card { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:16px; margin-top:16px; }
+.score-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.score-title { font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; }
+.score-badge { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700; }
+.score-high { background:rgba(34,197,94,0.15); color:var(--green); border:1px solid rgba(34,197,94,0.3); }
+.score-medium { background:rgba(234,179,8,0.15); color:var(--yellow); border:1px solid rgba(234,179,8,0.3); }
+.score-low { background:rgba(239,68,68,0.15); color:var(--red); border:1px solid rgba(239,68,68,0.3); }
+.score-number { font-size:42px; font-weight:700; color:var(--accent); text-align:center; margin:10px 0 4px; }
+.score-sub { text-align:center; font-size:11px; color:var(--muted); margin-bottom:14px; }
+.progress-bar-wrap { margin-bottom:10px; }
+.progress-label { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:4px; }
+.progress-track { height:6px; background:var(--bg2); border-radius:3px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:3px; transition:width 0.8s ease; }
+.fill-green { background:var(--green); }
+.fill-blue { background:var(--accent); }
+.fill-yellow { background:var(--yellow); }
+.fill-orange { background:var(--orange); }
+.conflict-list { margin-top:12px; }
+.conflict-item { display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:6px; margin-bottom:6px; font-size:12px; }
+.conflict-ok { background:rgba(34,197,94,0.1); color:var(--green); }
+.conflict-warn { background:rgba(234,179,8,0.1); color:var(--yellow); }
+.conflict-err { background:rgba(239,68,68,0.1); color:var(--red); }
+.conflict-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.dot-green { background:var(--green); }
+.dot-yellow { background:var(--yellow); }
+.dot-red { background:var(--red); }
+#map { flex:1; }
+.officer-panel { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.officer-header { padding:16px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.officer-header h3 { font-size:15px; font-weight:600; }
+.officer-stats { display:flex; gap:16px; }
+.stat-pill { text-align:center; }
+.stat-num { font-size:20px; font-weight:700; color:var(--accent); }
+.stat-lbl { font-size:10px; color:var(--muted); text-transform:uppercase; }
+.table-wrap { flex:1; overflow-y:auto; padding:16px 24px; }
+.table-wrap::-webkit-scrollbar { width:4px; }
+.table-wrap::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+thead th { padding:10px 12px; text-align:left; font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.4px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg); z-index:1; }
+tbody td { padding:10px 12px; border-bottom:1px solid rgba(51,65,85,0.5); vertical-align:middle; }
+tbody tr:hover { background:var(--bg2); }
+.status-pill { padding:3px 10px; border-radius:10px; font-size:11px; font-weight:600; }
+.pill-pending { background:rgba(234,179,8,0.15); color:var(--yellow); }
+.pill-approved { background:rgba(34,197,94,0.15); color:var(--green); }
+.pill-review { background:rgba(56,189,248,0.15); color:var(--accent); }
+.pill-rejected { background:rgba(239,68,68,0.15); color:var(--red); }
+.action-btn { padding:4px 10px; border-radius:4px; border:1px solid var(--border); background:transparent; color:var(--accent); font-size:11px; cursor:pointer; }
+.action-btn:hover { background:var(--accent); color:#0f172a; }
+.hidden { display:none !important; }
+.legend { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:12px; margin-top:14px; }
+.legend-title { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; margin-bottom:8px; }
+.legend-item { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text); margin-bottom:6px; }
+.legend-dot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
+.info-box { background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.2); border-radius:8px; padding:12px; margin-top:12px; font-size:12px; color:var(--muted); line-height:1.6; }
+.info-box strong { color:var(--accent); }
+.layer-toggles { margin-top:14px; }
+.layer-toggle { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:var(--bg); border:1px solid var(--border); border-radius:6px; margin-bottom:6px; cursor:pointer; font-size:12px; }
+.toggle-switch { width:32px; height:18px; background:var(--border); border-radius:9px; position:relative; transition:0.2s; }
+.toggle-switch.on { background:var(--accent); }
+.toggle-knob { position:absolute; top:2px; left:2px; width:14px; height:14px; background:#fff; border-radius:50%; transition:0.2s; }
+.toggle-switch.on .toggle-knob { left:16px; }
+.stab-row { display:flex; gap:4px; margin-bottom:14px; }
+.stab { flex:1; padding:7px; text-align:center; font-size:12px; font-weight:500; border-radius:6px; cursor:pointer; background:var(--bg); color:var(--muted); border:1px solid var(--border); }
+.stab.active { background:rgba(56,189,248,0.15); color:var(--accent); border-color:var(--accent); }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand">
+    <div class="nav-logo">GIS</div>
+    <div>
+      <div class="nav-title">NREDCAP AI Land Allocation Platform</div>
+      <div class="nav-subtitle">Anantapur District, Andhra Pradesh</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchView('developer',event)">🏗 Developer View</button>
+    <button class="nav-tab" onclick="switchView('officer',event)">🏛 Officer View</button>
+  </div>
+  <div class="nav-right">
+    <span class="badge">● LIVE DEMO</span>
+    <span>IndiaAI Challenge 2026</span>
+  </div>
+</nav>
+
+<!-- DEVELOPER VIEW -->
+<div class="main" id="developerView">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h3>🔍 Parcel Assessment</h3>
+      <p>Enter parcel details to run AI suitability check</p>
+    </div>
+    <div class="sidebar-body">
+      <div class="stab-row">
+        <div class="stab active" onclick="switchSideTab('parcel',this)">By Parcel ID</div>
+        <div class="stab" onclick="switchSideTab('map',this)">Draw on Map</div>
+      </div>
+
+      <div id="parcelTab">
+        <div class="form-group">
+          <label class="form-label">District</label>
+          <select class="form-control" disabled><option>Anantapur</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mandal</label>
+          <select class="form-control" id="mandalSelect" onchange="updateVillages()">
+            <option value="">-- Select Mandal --</option>
+            <option>Anantapur</option><option>Hindupur</option><option>Dharmavaram</option>
+            <option>Guntakal</option><option>Tadpatri</option><option>Kadiri</option>
+            <option>Rayadurg</option><option>Kalyandurg</option><option>Gooty</option>
+            <option>Madakasira</option><option>Uravakonda</option><option>Gorantla</option>
+            <option>Kanekal</option><option>Mudigubba</option><option>Puttaparthi</option>
+            <option>Parigi</option><option>Yadiki</option><option>Bommanahal</option>
+            <option>Penukonda</option><option>Pamidi</option><option>Narpala</option>
+            <option>Garladinne</option><option>Vidapanakal</option><option>Kundurpi</option>
+            <option>Gudibanda</option><option>Chilamathur</option><option>Roddam</option>
+            <option>Kambadur</option><option>Vajrakarur</option><option>Raptadu</option>
+            <option>Ramagiri</option><option>Tadimarri</option><option>Lepakshi</option>
+            <option>Brahmasamudram</option><option>Singanamala</option><option>Atmakur</option>
+            <option>Bukkapatnam</option><option>Agali</option><option>Beluguppa</option>
+            <option>Peddavadugur</option><option>Settur</option><option>Talupula</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Village</label>
+          <select class="form-control" id="villageSelect"><option value="">-- Select Mandal First --</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Survey Number</label>
+          <input class="form-control" type="text" id="surveyNum" placeholder="e.g. 245/A"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Area (Acres)</label>
+          <input class="form-control" type="number" id="areaInput" placeholder="e.g. 500" min="1"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Technology Type</label>
+          <select class="form-control" id="techType">
+            <option value="solar">Solar PV</option>
+            <option value="wind">Wind</option>
+            <option value="hybrid">Solar-Wind Hybrid</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="runAssessment()">▶ Run AI Assessment</button>
+        <button class="btn btn-secondary" onclick="clearAssessment()">✕ Clear</button>
+
+        <div class="layer-toggles">
+          <div class="form-label" style="margin-top:14px;">Map Layers</div>
+          <div class="layer-toggle" onclick="toggleLayer('gotozones',this)">
+            <span>🟢 Go-To Zones</span>
+            <div class="toggle-switch on"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="layer-toggle" onclick="toggleLayer('protected',this)">
+            <span>🔴 Protected Areas</span>
+            <div class="toggle-switch on"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="layer-toggle" onclick="toggleLayer('grid',this)">
+            <span>🔵 Grid Lines</span>
+            <div class="toggle-switch on"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="layer-toggle" onclick="toggleLayer('solar',this)">
+            <span>🟡 Solar Resource</span>
+            <div class="toggle-switch"><div class="toggle-knob"></div></div>
+          </div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-title">Map Legend</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#22c55e;opacity:0.7"></div> Go-To Zone (Fast-Track)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ef4444;opacity:0.6"></div> Protected / Restricted Area</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#38bdf8;"></div> 220kV Grid Line</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f97316;"></div> Selected Parcel</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#a855f7;"></div> Existing RE Project</div>
+        </div>
+      </div>
+
+      <div id="mapTab" class="hidden">
+        <div class="info-box">
+          <strong>Draw Mode Active</strong><br>
+          Click on the map to place boundary points. Double-click to complete the polygon. The AI engine will automatically assess the drawn area.
+        </div>
+        <div class="form-group" style="margin-top:14px;">
+          <label class="form-label">Technology Type</label>
+          <select class="form-control" id="techTypeDraw">
+            <option value="solar">Solar PV</option>
+            <option value="wind">Wind</option>
+            <option value="hybrid">Solar-Wind Hybrid</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="startDraw()">✏ Start Drawing</button>
+        <button class="btn btn-secondary" onclick="clearDraw()">✕ Clear Drawing</button>
+      </div>
+
+      <div id="resultPanel" class="hidden">
+        <div class="score-card">
+          <div class="score-header">
+            <span class="score-title">Suitability Score</span>
+            <span class="score-badge" id="scoreBadge"></span>
+          </div>
+          <div class="score-number" id="scoreNum">--</div>
+          <div class="score-sub">out of 100</div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span>Solar Resource</span><span id="solarVal">--</span></div>
+            <div class="progress-track"><div class="progress-fill fill-yellow" id="solarBar" style="width:0%"></div></div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span>Grid Proximity</span><span id="gridVal">--</span></div>
+            <div class="progress-track"><div class="progress-fill fill-blue" id="gridBar" style="width:0%"></div></div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span>Land Suitability</span><span id="landVal">--</span></div>
+            <div class="progress-track"><div class="progress-fill fill-green" id="landBar" style="width:0%"></div></div>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-label"><span>Access &amp; Slope</span><span id="accessVal">--</span></div>
+            <div class="progress-track"><div class="progress-fill fill-orange" id="accessBar" style="width:0%"></div></div>
+          </div>
+          <div class="conflict-list" id="conflictList"></div>
+          <div id="gotoZoneNotice" class="hidden" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:6px;padding:10px;margin-top:12px;font-size:12px;color:#22c55e;">
+            ✅ <strong>Go-To Zone:</strong> This parcel falls within a pre-approved go-to zone. Eligible for <strong>fast-track approval</strong>.
+          </div>
+          <button class="btn btn-secondary" style="margin-top:14px;font-size:12px;" onclick="downloadReport()">⬇ Download PDF Report</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div id="map"></div>
+</div>
+
+<!-- OFFICER VIEW -->
+<div class="main hidden" id="officerView">
+  <div class="officer-panel">
+    <div class="officer-header">
+      <div>
+        <h3>📋 Application Review Dashboard — Anantapur District</h3>
+        <p style="font-size:12px;color:var(--muted);margin-top:2px;">NREDCAP Officer Portal · All RE Land Allocation Applications</p>
+      </div>
+      <div class="officer-stats">
+        <div class="stat-pill"><div class="stat-num">24</div><div class="stat-lbl">Total</div></div>
+        <div class="stat-pill"><div class="stat-num" style="color:#eab308">8</div><div class="stat-lbl">Pending</div></div>
+        <div class="stat-pill"><div class="stat-num" style="color:#22c55e">12</div><div class="stat-lbl">Approved</div></div>
+        <div class="stat-pill"><div class="stat-num" style="color:#38bdf8">3</div><div class="stat-lbl">In Review</div></div>
+        <div class="stat-pill"><div class="stat-num" style="color:#ef4444">1</div><div class="stat-lbl">Rejected</div></div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>App ID</th><th>Developer</th><th>Mandal</th><th>Survey No.</th>
+            <th>Area (Acres)</th><th>Technology</th><th>AI Score</th>
+            <th>Go-To Zone</th><th>Conflicts</th><th>Status</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="officerTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const villages = {
+  "Anantapur":["Anantapur Urban","Anantapur Rural","Kamalanagar","Subedari","Ramnagar"],
+  "Hindupur":["Hindupur","Pendekallu","Lepakshi","Bommajipalli","Tekulodu"],
+  "Dharmavaram":["Dharmavaram","Gollapalle","Kothacheruvu","Hanumanthunipadu","Bukkaraya Samudram"],
+  "Guntakal":["Guntakal","Nossam","Gooty Kunta","Peddabudhur","Somandepalle"],
+  "Tadpatri":["Tadpatri","Mylavaram","Nambulipulikunta","Chintakunta","Erraguntla"],
+  "Kadiri":["Kadiri","Mudigubba","Amadagur","Tanakal","Kanaganapalle"],
+  "Rayadurg":["Rayadurg","Vidapanakal","Kundurpi","Beluguppa","Bommanahal"],
+  "Kalyandurg":["Kalyandurg","Rolla","Agali","Nallamada","Settur"],
+  "Kambadur":["Ralla","Kambadur","Gooty","Bathalapalle","Peddapappur"],
+  "Brahmasamudram":["Brahmasamudram","Narpala","Garladinne","Vajrakarur","Roddam"],
+};
+const gotoZones=[
+  [[14.95,77.45],[15.05,77.45],[15.05,77.60],[14.95,77.60]],
+  [[14.60,77.20],[14.72,77.20],[14.72,77.38],[14.60,77.38]],
+  [[14.30,77.70],[14.45,77.70],[14.45,77.88],[14.30,77.88]],
+];
+const protectedAreas=[
+  [[14.80,77.90],[14.92,77.90],[14.92,78.05],[14.80,78.05]],
+  [[13.90,77.10],[14.05,77.10],[14.05,77.28],[13.90,77.28]],
+];
+const gridLines=[
+  [[15.2,76.9],[14.7,77.6],[14.2,78.1]],
+  [[15.0,77.5],[14.5,77.5],[14.0,77.8]],
+];
+const mandalCenters={
+  "Anantapur":{lat:14.685,lng:77.595,solar:88,grid:9,land:72,slope:91},
+  "Hindupur":{lat:13.828,lng:77.490,solar:83,grid:18,land:65,slope:88},
+  "Dharmavaram":{lat:14.414,lng:77.717,solar:87,grid:12,land:78,slope:90},
+  "Guntakal":{lat:15.171,lng:77.366,solar:90,grid:7,land:80,slope:93},
+  "Kadiri":{lat:14.118,lng:78.157,solar:82,grid:22,land:60,slope:85},
+  "Rayadurg":{lat:14.695,lng:76.861,solar:86,grid:25,land:70,slope:89},
+  "Kambadur":{lat:15.00,lng:77.52,solar:95,grid:5,land:92,slope:95},
+  "Kalyandurg":{lat:14.545,lng:77.108,solar:88,grid:14,land:75,slope:90},
+  "Tadpatri":{lat:14.909,lng:78.007,solar:84,grid:16,land:68,slope:87},
+  "Brahmasamudram":{lat:14.76,lng:77.40,solar:91,grid:8,land:82,slope:92},
+};
+const applications=[
+  {id:"NRD-2026-001",dev:"Tata Power RE Ltd",mandal:"Kambadur",survey:"156/B",area:1200,tech:"Solar PV",score:92,goto:true,conflicts:0,status:"approved"},
+  {id:"NRD-2026-002",dev:"Adani Green Energy",mandal:"Guntakal",survey:"89/A",area:800,tech:"Solar PV",score:88,goto:true,conflicts:0,status:"approved"},
+  {id:"NRD-2026-003",dev:"ReNew Power",mandal:"Brahmasamudram",survey:"342",area:600,tech:"Wind",score:76,goto:false,conflicts:1,status:"review"},
+  {id:"NRD-2026-004",dev:"Greenko Energy",mandal:"Anantapur",survey:"211/C",area:400,tech:"Solar PV",score:81,goto:false,conflicts:0,status:"pending"},
+  {id:"NRD-2026-005",dev:"NTPC Renewable",mandal:"Rayadurg",survey:"78",area:2000,tech:"Solar-Wind Hybrid",score:85,goto:true,conflicts:0,status:"approved"},
+  {id:"NRD-2026-006",dev:"Mahindra Susten",mandal:"Kadiri",survey:"443/A",area:300,tech:"Solar PV",score:61,goto:false,conflicts:2,status:"rejected"},
+  {id:"NRD-2026-007",dev:"Avaada Energy",mandal:"Dharmavaram",survey:"167",area:550,tech:"Solar PV",score:84,goto:false,conflicts:0,status:"pending"},
+  {id:"NRD-2026-008",dev:"Torrent Power",mandal:"Kalyandurg",survey:"290/B",area:750,tech:"Wind",score:79,goto:true,conflicts:0,status:"approved"},
+  {id:"NRD-2026-009",dev:"Azure Power",mandal:"Guntakal",survey:"512",area:900,tech:"Solar PV",score:90,goto:true,conflicts:0,status:"approved"},
+  {id:"NRD-2026-010",dev:"Hero Future Energies",mandal:"Tadpatri",survey:"33/A",area:420,tech:"Solar PV",score:72,goto:false,conflicts:1,status:"pending"},
+  {id:"NRD-2026-011",dev:"CleanMax Solar",mandal:"Anantapur",survey:"88",area:180,tech:"Solar PV",score:78,goto:false,conflicts:0,status:"review"},
+  {id:"NRD-2026-012",dev:"Sprng Energy",mandal:"Kambadur",survey:"203/C",area:1500,tech:"Solar-Wind Hybrid",score:94,goto:true,conflicts:0,status:"approved"},
+  {id:"NRD-2026-013",dev:"Engie India",mandal:"Brahmasamudram",survey:"67/B",area:650,tech:"Solar PV",score:88,goto:true,conflicts:0,status:"pending"},
+  {id:"NRD-2026-014",dev:"Ayana Renewable",mandal:"Hindupur",survey:"129",area:280,tech:"Wind",score:65,goto:false,conflicts:1,status:"review"},
+];
+
+let map,gotoLayer,protectedLayer,gridLayer,solarLayer,parcelMarker,drawnPolygon;
+let layerState={gotozones:true,protected:true,grid:true,solar:false};
+let drawPoints=[],drawMarkers=[];
+
+window.onload=function(){
+  map=L.map('map',{center:[14.68,77.60],zoom:9});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:18}).addTo(map);
+
+  gotoLayer=L.layerGroup();
+  gotoZones.forEach((c,i)=>{
+    L.polygon(c,{color:'#22c55e',fillColor:'#22c55e',fillOpacity:0.18,weight:2,dashArray:'6,4'})
+      .bindPopup(`<b style="color:#22c55e">Go-To Zone ${i+1}</b><br>Fast-Track Eligible<br>High Solar Potential`).addTo(gotoLayer);
+  });
+  gotoLayer.addTo(map);
+
+  protectedLayer=L.layerGroup();
+  protectedAreas.forEach((c,i)=>{
+    L.polygon(c,{color:'#ef4444',fillColor:'#ef4444',fillOpacity:0.15,weight:1.5,dashArray:'4,4'})
+      .bindPopup(`<b style="color:#ef4444">Protected Area ${i+1}</b><br>No development permitted`).addTo(protectedLayer);
+  });
+  protectedLayer.addTo(map);
+
+  gridLayer=L.layerGroup();
+  gridLines.forEach(pts=>{
+    L.polyline(pts,{color:'#38bdf8',weight:2.5,opacity:0.7,dashArray:'8,4'})
+      .bindPopup('<b style="color:#38bdf8">220kV Transmission Line</b>').addTo(gridLayer);
+  });
+  gridLayer.addTo(map);
+
+  solarLayer=L.layerGroup();
+  [[15.0,77.5,95],[14.85,77.35,91],[14.65,77.60,88],[14.45,77.25,86],[14.15,77.90,82]].forEach(([lat,lng,val])=>{
+    L.circle([lat,lng],{radius:18000,color:'#eab308',fillColor:'#eab308',fillOpacity:0.12,weight:1})
+      .bindPopup(`Solar GHI: ~${val+5.5} MJ/m²/day`).addTo(solarLayer);
+  });
+
+  [[15.01,77.52,'Ralla Solar Park 2400MW','#a855f7'],[14.70,77.59,'Anantapur Solar 100MW','#a855f7']].forEach(([lat,lng,name,col])=>{
+    L.circleMarker([lat,lng],{radius:10,color:col,fillColor:col,fillOpacity:0.5,weight:2})
+      .bindPopup(`<b style="color:${col}">${name}</b><br>Existing Project`).addTo(map);
+  });
+
+  populateOfficerTable();
+};
+
+function switchSideTab(tab,el){
+  document.querySelectorAll('.stab').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('parcelTab').classList.toggle('hidden',tab!=='parcel');
+  document.getElementById('mapTab').classList.toggle('hidden',tab!=='map');
+}
+
+function switchView(v,e){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById('developerView').classList.toggle('hidden',v!=='developer');
+  document.getElementById('officerView').classList.toggle('hidden',v!=='officer');
+  if(v==='developer'&&map)setTimeout(()=>map.invalidateSize(),100);
+}
+
+function updateVillages(){
+  const m=document.getElementById('mandalSelect').value;
+  const sel=document.getElementById('villageSelect');
+  sel.innerHTML='';
+  (villages[m]||['Village-A','Village-B','Village-C']).forEach(v=>{
+    const o=document.createElement('option');o.value=v;o.text=v;sel.appendChild(o);
+  });
+}
+
+function runAssessment(){
+  const mandal=document.getElementById('mandalSelect').value;
+  const survey=document.getElementById('surveyNum').value||'---';
+  if(!mandal){alert('Please select a Mandal first.');return;}
+  const d=mandalCenters[mandal]||{lat:14.68,lng:77.60,solar:85,grid:15,land:72,slope:88};
+  const solarScore=d.solar,gridScore=Math.max(10,100-d.grid*3),landScore=d.land,accessScore=d.slope;
+  const total=Math.round(solarScore*0.35+gridScore*0.30+landScore*0.20+accessScore*0.15);
+  const inProtected=protectedAreas.some(z=>d.lat>z[0][0]&&d.lat<z[2][0]&&d.lng>z[0][1]&&d.lng<z[2][1]);
+  const nearGrid=d.grid<15;
+  const inGoto=gotoZones.some(z=>d.lat>z[0][0]&&d.lat<z[2][0]&&d.lng>z[0][1]&&d.lng<z[2][1]);
+
+  if(parcelMarker)map.removeLayer(parcelMarker);
+  parcelMarker=L.circle([d.lat,d.lng],{radius:6000,color:'#f97316',fillColor:'#f97316',fillOpacity:0.3,weight:2.5})
+    .bindPopup(`<b style="color:#f97316">Selected Parcel</b><br>Survey: ${survey}<br>Score: <b>${total}/100</b>`).addTo(map);
+  map.setView([d.lat,d.lng],11);parcelMarker.openPopup();
+
+  const rp=document.getElementById('resultPanel');rp.classList.remove('hidden');
+  const badge=document.getElementById('scoreBadge');
+  document.getElementById('scoreNum').textContent=total;
+  if(total>=80){badge.textContent='HIGH';badge.className='score-badge score-high';}
+  else if(total>=60){badge.textContent='MEDIUM';badge.className='score-badge score-medium';}
+  else{badge.textContent='LOW';badge.className='score-badge score-low';}
+
+  document.getElementById('solarVal').textContent=solarScore+'%';document.getElementById('solarBar').style.width=solarScore+'%';
+  document.getElementById('gridVal').textContent=gridScore+'%';document.getElementById('gridBar').style.width=gridScore+'%';
+  document.getElementById('landVal').textContent=landScore+'%';document.getElementById('landBar').style.width=landScore+'%';
+  document.getElementById('accessVal').textContent=accessScore+'%';document.getElementById('accessBar').style.width=accessScore+'%';
+
+  document.getElementById('conflictList').innerHTML=`
+    <div class="conflict-item ${inProtected?'conflict-err':'conflict-ok'}"><div class="conflict-dot ${inProtected?'dot-red':'dot-green'}"></div>Protected area overlap: ${inProtected?'⚠ CONFLICT':'✓ Clear'}</div>
+    <div class="conflict-item conflict-ok"><div class="conflict-dot dot-green"></div>Existing RE project overlap: ✓ Clear</div>
+    <div class="conflict-item ${nearGrid?'conflict-ok':'conflict-warn'}"><div class="conflict-dot ${nearGrid?'dot-green':'dot-yellow'}"></div>Grid proximity (${d.grid} km): ${nearGrid?'✓ Excellent':'⚠ Moderate'}</div>
+    <div class="conflict-item conflict-ok"><div class="conflict-dot dot-green"></div>Land dispute records: ✓ None found</div>
+    <div class="conflict-item conflict-ok"><div class="conflict-dot dot-green"></div>Environmental clearance zone: ✓ Clear</div>`;
+
+  document.getElementById('gotoZoneNotice').classList.toggle('hidden',!inGoto);
+  rp.scrollIntoView({behavior:'smooth'});
+}
+
+function clearAssessment(){
+  document.getElementById('mandalSelect').value='';
+  document.getElementById('surveyNum').value='';
+  document.getElementById('areaInput').value='';
+  document.getElementById('resultPanel').classList.add('hidden');
+  if(parcelMarker){map.removeLayer(parcelMarker);parcelMarker=null;}
+  map.setView([14.68,77.60],9);
+}
+
+function toggleLayer(name,el){
+  layerState[name]=!layerState[name];
+  el.querySelector('.toggle-switch').classList.toggle('on',layerState[name]);
+  const layers={gotozones:gotoLayer,protected:protectedLayer,grid:gridLayer,solar:solarLayer};
+  if(layerState[name])layers[name].addTo(map); else map.removeLayer(layers[name]);
+}
+
+function startDraw(){
+  alert('Draw mode: Click on the map to add polygon points. Double-click to finish.');
+  map.on('click',onMapClick);map.on('dblclick',finishDraw);
+}
+function onMapClick(e){
+  drawPoints.push([e.latlng.lat,e.latlng.lng]);
+  drawMarkers.push(L.circleMarker(e.latlng,{radius:5,color:'#f97316'}).addTo(map));
+  if(drawPoints.length>2){if(drawnPolygon)map.removeLayer(drawnPolygon);drawnPolygon=L.polygon(drawPoints,{color:'#f97316',fillOpacity:0.2}).addTo(map);}
+}
+function finishDraw(){map.off('click',onMapClick);map.off('dblclick',finishDraw);alert(`Polygon drawn! Switch to "By Parcel ID" tab and click Run Assessment.`);}
+function clearDraw(){map.off('click',onMapClick);map.off('dblclick',finishDraw);drawMarkers.forEach(m=>map.removeLayer(m));drawMarkers=[];if(drawnPolygon){map.removeLayer(drawnPolygon);drawnPolygon=null;}drawPoints=[];}
+
+function downloadReport(){
+  const mandal=document.getElementById('mandalSelect').value||'N/A';
+  const survey=document.getElementById('surveyNum').value||'N/A';
+  const score=document.getElementById('scoreNum').textContent;
+  const rating=document.getElementById('scoreBadge').textContent;
+  const blob=new Blob([`NREDCAP AI SUITABILITY REPORT\n${'='.repeat(40)}\nDate: ${new Date().toLocaleDateString('en-IN')}\nDistrict: Anantapur\nMandal: ${mandal}\nSurvey No: ${survey}\nAI Score: ${score}/100\nRating: ${rating}\n\nSolar Resource: ${document.getElementById('solarVal').textContent}\nGrid Proximity: ${document.getElementById('gridVal').textContent}\nLand Suitability: ${document.getElementById('landVal').textContent}\nAccess & Slope: ${document.getElementById('accessVal').textContent}\n\nGenerated by NREDCAP AI Platform — IndiaAI Challenge 2026`],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`NREDCAP_${mandal}_${survey.replace('/','_')}.txt`;a.click();
+}
+
+function populateOfficerTable(){
+  document.getElementById('officerTable').innerHTML=applications.map(a=>{
+    const sc=a.score,col=sc>=80?'#22c55e':sc>=65?'#eab308':'#ef4444';
+    const statMap={pending:'pill-pending',approved:'pill-approved',review:'pill-review',rejected:'pill-rejected'};
+    return `<tr>
+      <td style="color:#38bdf8;font-weight:600">${a.id}</td><td>${a.dev}</td><td>${a.mandal}</td>
+      <td style="font-family:monospace">${a.survey}</td><td>${a.area.toLocaleString()}</td><td>${a.tech}</td>
+      <td><span style="font-weight:700;color:${col}">${a.score}</span>/100</td>
+      <td>${a.goto?'<span style="color:#22c55e">✅ Yes</span>':'<span style="color:#94a3b8">—</span>'}</td>
+      <td>${a.conflicts===0?'<span style="color:#22c55e">✓ None</span>':'<span style="color:#ef4444">⚠ '+a.conflicts+'</span>'}</td>
+      <td><span class="status-pill ${statMap[a.status]}">${a.status.charAt(0).toUpperCase()+a.status.slice(1)}</span></td>
+      <td><button class="action-btn" onclick="reviewApp('${a.id}')">Review</button></td></tr>`;
+  }).join('');
+}
+
+function reviewApp(id){
+  const a=applications.find(x=>x.id===id);if(!a)return;
+  if(confirm(`${a.id} | ${a.dev}\nMandal: ${a.mandal} | Score: ${a.score}/100\nConflicts: ${a.conflicts} | Go-To Zone: ${a.goto?'Yes':'No'}\n\nApprove this application?`))
+    alert(`✅ ${a.id} approved → routed to ${a.goto?'GREEN CHANNEL (fast-track)':'standard workflow'}.`);
+}
+</script>
+</body>
+</html>
