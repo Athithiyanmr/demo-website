@@ -1,140 +1,325 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NREDCAP AI Land Allocation Platform – Anantapur</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0f172a; --bg2: #1e293b; --bg3: #0a1628;
-  --accent: #38bdf8; --accent2: #0ea5e9; --green: #22c55e;
-  --yellow: #eab308; --red: #ef4444; --orange: #f97316;
-  --text: #f1f5f9; --muted: #94a3b8; --border: #334155;
+  --bg: #0b1222; --bg2: #131d2e; --bg3: #0a0f1a;
+  --surface: #172033; --surface2: #1c2a40;
+  --accent: #38bdf8; --accent2: #0ea5e9; --accent-soft: rgba(56,189,248,0.08);
+  --green: #22c55e; --green-soft: rgba(34,197,94,0.1);
+  --yellow: #eab308; --yellow-soft: rgba(234,179,8,0.1);
+  --red: #ef4444; --red-soft: rgba(239,68,68,0.1);
+  --orange: #f97316; --purple: #a855f7;
+  --text: #f1f5f9; --text2: #e2e8f0; --muted: #64748b; --muted2: #94a3b8;
+  --border: #1e2d44; --border2: #293a52;
+  --radius: 8px; --radius-lg: 12px; --radius-xl: 16px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 48px rgba(0,0,0,0.5);
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: 'Segoe UI', Arial, sans-serif; background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column; overflow:hidden; }
-.navbar { background:var(--bg3); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; height:56px; flex-shrink:0; z-index:1000; }
+body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+
+/* ── Navbar ── */
+.navbar { background:var(--bg3); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; height:52px; flex-shrink:0; z-index:1000; }
 .nav-brand { display:flex; align-items:center; gap:12px; }
-.nav-logo { width:36px; height:36px; background:var(--accent); border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; color:#0f172a; }
-.nav-title { font-size:15px; font-weight:600; color:var(--text); }
-.nav-subtitle { font-size:11px; color:var(--muted); }
-.nav-tabs { display:flex; gap:4px; }
-.nav-tab { padding:6px 18px; border-radius:6px; cursor:pointer; font-size:13px; font-weight:500; border:none; background:transparent; color:var(--muted); transition:all 0.2s; }
-.nav-tab.active { background:var(--accent); color:#0f172a; }
-.nav-tab:hover:not(.active) { background:var(--bg2); color:var(--text); }
-.nav-right { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted); }
-.badge { background:var(--green); color:#fff; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:600; }
+.nav-logo { width:34px; height:34px; background:linear-gradient(135deg, var(--accent), #0284c7); border-radius:8px; display:flex; align-items:center; justify-content:center; }
+.nav-logo svg { width:18px; height:18px; }
+.nav-title { font-size:14px; font-weight:700; color:var(--text); letter-spacing:-0.02em; }
+.nav-subtitle { font-size:10px; color:var(--muted); font-weight:500; letter-spacing:0.03em; }
+.nav-tabs { display:flex; gap:2px; background:var(--surface); border-radius:8px; padding:3px; }
+.nav-tab { padding:6px 16px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; border:none; background:transparent; color:var(--muted2); transition:var(--transition); letter-spacing:-0.01em; }
+.nav-tab.active { background:var(--accent); color:#0b1222; box-shadow:0 2px 8px rgba(56,189,248,0.3); }
+.nav-tab:hover:not(.active) { color:var(--text); }
+.nav-right { display:flex; align-items:center; gap:12px; font-size:11px; color:var(--muted); }
+.badge-live { display:flex; align-items:center; gap:5px; background:rgba(34,197,94,0.12); color:var(--green); padding:4px 10px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.04em; }
+.badge-live::before { content:''; width:6px; height:6px; background:var(--green); border-radius:50%; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+/* ── Main Layout ── */
 .main { display:flex; flex:1; overflow:hidden; }
+.hidden { display:none !important; }
+
+/* ── Sidebar ── */
 .sidebar { width:340px; flex-shrink:0; background:var(--bg2); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; }
 .sidebar-header { padding:16px; border-bottom:1px solid var(--border); }
-.sidebar-header h3 { font-size:14px; color:var(--accent); font-weight:600; margin-bottom:4px; }
+.sidebar-header h3 { font-size:13px; color:var(--accent); font-weight:700; margin-bottom:3px; letter-spacing:-0.01em; }
 .sidebar-header p { font-size:11px; color:var(--muted); }
 .sidebar-body { flex:1; overflow-y:auto; padding:16px; }
-.sidebar-body::-webkit-scrollbar { width:4px; }
-.sidebar-body::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+.sidebar-body::-webkit-scrollbar { width:3px; }
+.sidebar-body::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+/* ── Form Controls ── */
 .form-group { margin-bottom:14px; }
-.form-label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; display:block; }
-.form-control { width:100%; padding:9px 12px; background:var(--bg); border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:13px; outline:none; transition:border 0.2s; }
-.form-control:focus { border-color:var(--accent); }
+.form-label { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; display:block; }
+.form-control { width:100%; padding:8px 12px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); color:var(--text); font-size:13px; font-family:inherit; outline:none; transition:var(--transition); }
+.form-control:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(56,189,248,0.1); }
 .form-control option { background:var(--bg2); }
-.btn { padding:10px 20px; border-radius:6px; border:none; cursor:pointer; font-size:13px; font-weight:600; transition:all 0.2s; width:100%; }
-.btn-primary { background:var(--accent); color:#0f172a; }
-.btn-primary:hover { background:var(--accent2); }
-.btn-secondary { background:var(--bg); border:1px solid var(--border); color:var(--text); margin-top:8px; }
+.btn { padding:9px 18px; border-radius:var(--radius); border:none; cursor:pointer; font-size:12px; font-weight:700; transition:var(--transition); width:100%; font-family:inherit; letter-spacing:-0.01em; }
+.btn-primary { background:var(--accent); color:#0b1222; }
+.btn-primary:hover { background:var(--accent2); box-shadow:0 2px 12px rgba(56,189,248,0.3); }
+.btn-secondary { background:transparent; border:1px solid var(--border); color:var(--muted2); margin-top:8px; }
 .btn-secondary:hover { border-color:var(--accent); color:var(--accent); }
-.score-card { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:16px; margin-top:16px; }
+
+/* ── Score Card ── */
+.score-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px; margin-top:16px; }
 .score-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-.score-title { font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; }
-.score-badge { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700; }
-.score-high { background:rgba(34,197,94,0.15); color:var(--green); border:1px solid rgba(34,197,94,0.3); }
-.score-medium { background:rgba(234,179,8,0.15); color:var(--yellow); border:1px solid rgba(234,179,8,0.3); }
-.score-low { background:rgba(239,68,68,0.15); color:var(--red); border:1px solid rgba(239,68,68,0.3); }
-.score-number { font-size:42px; font-weight:700; color:var(--accent); text-align:center; margin:10px 0 4px; }
-.score-sub { text-align:center; font-size:11px; color:var(--muted); margin-bottom:14px; }
+.score-title { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+.score-badge { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:800; letter-spacing:0.03em; }
+.score-high { background:var(--green-soft); color:var(--green); border:1px solid rgba(34,197,94,0.25); }
+.score-medium { background:var(--yellow-soft); color:var(--yellow); border:1px solid rgba(234,179,8,0.25); }
+.score-low { background:var(--red-soft); color:var(--red); border:1px solid rgba(239,68,68,0.25); }
+.score-number { font-size:42px; font-weight:800; color:var(--accent); text-align:center; margin:8px 0 2px; letter-spacing:-0.04em; }
+.score-sub { text-align:center; font-size:10px; color:var(--muted); margin-bottom:14px; }
 .progress-bar-wrap { margin-bottom:10px; }
-.progress-label { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:4px; }
-.progress-track { height:6px; background:var(--bg2); border-radius:3px; overflow:hidden; }
-.progress-fill { height:100%; border-radius:3px; transition:width 0.8s ease; }
+.progress-label { display:flex; justify-content:space-between; font-size:11px; color:var(--muted2); margin-bottom:4px; }
+.progress-track { height:5px; background:var(--bg); border-radius:3px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:3px; transition:width 1s cubic-bezier(0.4, 0, 0.2, 1); }
 .fill-green { background:var(--green); }
 .fill-blue { background:var(--accent); }
 .fill-yellow { background:var(--yellow); }
 .fill-orange { background:var(--orange); }
 .conflict-list { margin-top:12px; }
-.conflict-item { display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:6px; margin-bottom:6px; font-size:12px; }
-.conflict-ok { background:rgba(34,197,94,0.1); color:var(--green); }
-.conflict-warn { background:rgba(234,179,8,0.1); color:var(--yellow); }
-.conflict-err { background:rgba(239,68,68,0.1); color:var(--red); }
-.conflict-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.conflict-item { display:flex; align-items:center; gap:8px; padding:6px 10px; border-radius:6px; margin-bottom:5px; font-size:11px; font-weight:500; }
+.conflict-ok { background:var(--green-soft); color:var(--green); }
+.conflict-warn { background:var(--yellow-soft); color:var(--yellow); }
+.conflict-err { background:var(--red-soft); color:var(--red); }
+.conflict-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
 .dot-green { background:var(--green); }
 .dot-yellow { background:var(--yellow); }
 .dot-red { background:var(--red); }
+
+/* ── Map ── */
 #map { flex:1; }
-.officer-panel { flex:1; display:flex; flex-direction:column; overflow:hidden; }
-.officer-header { padding:16px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
-.officer-header h3 { font-size:15px; font-weight:600; }
-.officer-stats { display:flex; gap:16px; }
-.stat-pill { text-align:center; }
-.stat-num { font-size:20px; font-weight:700; color:var(--accent); }
-.stat-lbl { font-size:10px; color:var(--muted); text-transform:uppercase; }
-.table-wrap { flex:1; overflow-y:auto; padding:16px 24px; }
-.table-wrap::-webkit-scrollbar { width:4px; }
-.table-wrap::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
-table { width:100%; border-collapse:collapse; font-size:13px; }
-thead th { padding:10px 12px; text-align:left; font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.4px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg); z-index:1; }
-tbody td { padding:10px 12px; border-bottom:1px solid rgba(51,65,85,0.5); vertical-align:middle; }
-tbody tr:hover { background:var(--bg2); }
-.status-pill { padding:3px 10px; border-radius:10px; font-size:11px; font-weight:600; }
-.pill-pending { background:rgba(234,179,8,0.15); color:var(--yellow); }
-.pill-approved { background:rgba(34,197,94,0.15); color:var(--green); }
-.pill-review { background:rgba(56,189,248,0.15); color:var(--accent); }
-.pill-rejected { background:rgba(239,68,68,0.15); color:var(--red); }
-.action-btn { padding:4px 10px; border-radius:4px; border:1px solid var(--border); background:transparent; color:var(--accent); font-size:11px; cursor:pointer; }
-.action-btn:hover { background:var(--accent); color:#0f172a; }
-.hidden { display:none !important; }
-.legend { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:12px; margin-top:14px; }
-.legend-title { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; margin-bottom:8px; }
-.legend-item { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text); margin-bottom:6px; }
-.legend-dot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
-.info-box { background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.2); border-radius:8px; padding:12px; margin-top:12px; font-size:12px; color:var(--muted); line-height:1.6; }
-.info-box strong { color:var(--accent); }
+
+/* ── Tabs ── */
+.stab-row { display:flex; gap:3px; margin-bottom:14px; background:var(--surface); border-radius:var(--radius); padding:3px; }
+.stab { flex:1; padding:6px; text-align:center; font-size:11px; font-weight:600; border-radius:6px; cursor:pointer; background:transparent; color:var(--muted); border:none; transition:var(--transition); }
+.stab.active { background:var(--accent-soft); color:var(--accent); }
+
+/* ── Layer Toggles ── */
 .layer-toggles { margin-top:14px; }
-.layer-toggle { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:var(--bg); border:1px solid var(--border); border-radius:6px; margin-bottom:6px; cursor:pointer; font-size:12px; }
-.toggle-switch { width:32px; height:18px; background:var(--border); border-radius:9px; position:relative; transition:0.2s; }
+.layer-toggle { display:flex; align-items:center; justify-content:space-between; padding:7px 10px; background:var(--surface); border:1px solid var(--border); border-radius:6px; margin-bottom:5px; cursor:pointer; font-size:11px; color:var(--text2); transition:var(--transition); }
+.layer-toggle:hover { border-color:var(--border2); }
+.toggle-switch { width:30px; height:16px; background:var(--border2); border-radius:8px; position:relative; transition:var(--transition); }
 .toggle-switch.on { background:var(--accent); }
-.toggle-knob { position:absolute; top:2px; left:2px; width:14px; height:14px; background:#fff; border-radius:50%; transition:0.2s; }
+.toggle-knob { position:absolute; top:2px; left:2px; width:12px; height:12px; background:#fff; border-radius:50%; transition:var(--transition); }
 .toggle-switch.on .toggle-knob { left:16px; }
-.stab-row { display:flex; gap:4px; margin-bottom:14px; }
-.stab { flex:1; padding:7px; text-align:center; font-size:12px; font-weight:500; border-radius:6px; cursor:pointer; background:var(--bg); color:var(--muted); border:1px solid var(--border); }
-.stab.active { background:rgba(56,189,248,0.15); color:var(--accent); border-color:var(--accent); }
+
+/* ── Legend ── */
+.legend { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px; margin-top:14px; }
+.legend-title { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px; }
+.legend-item { display:flex; align-items:center; gap:8px; font-size:11px; color:var(--text2); margin-bottom:5px; }
+.legend-dot { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+.info-box { background:var(--accent-soft); border:1px solid rgba(56,189,248,0.15); border-radius:var(--radius); padding:12px; margin-top:12px; font-size:11px; color:var(--muted2); line-height:1.6; }
+.info-box strong { color:var(--accent); }
+
+/* ── Officer Panel ── */
+.officer-panel { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.officer-header { padding:16px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:var(--bg2); }
+.officer-header h3 { font-size:14px; font-weight:700; letter-spacing:-0.02em; }
+.officer-header p { font-size:11px; color:var(--muted); margin-top:2px; }
+.officer-stats { display:flex; gap:20px; }
+.stat-pill { text-align:center; }
+.stat-num { font-size:20px; font-weight:800; color:var(--accent); letter-spacing:-0.03em; }
+.stat-lbl { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; font-weight:600; }
+
+/* ── Table ── */
+.table-wrap { flex:1; overflow-y:auto; padding:0 24px 24px; }
+.table-wrap::-webkit-scrollbar { width:3px; }
+.table-wrap::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+table { width:100%; border-collapse:collapse; font-size:12px; }
+thead th { padding:12px 12px; text-align:left; font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg); z-index:1; }
+tbody td { padding:10px 12px; border-bottom:1px solid rgba(30,45,68,0.5); vertical-align:middle; }
+tbody tr { transition:background var(--transition); }
+tbody tr:hover { background:var(--surface); }
+.status-pill { padding:3px 10px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.03em; white-space:nowrap; }
+.pill-pending { background:var(--yellow-soft); color:var(--yellow); }
+.pill-approved { background:var(--green-soft); color:var(--green); }
+.pill-review { background:var(--accent-soft); color:var(--accent); }
+.pill-rejected { background:var(--red-soft); color:var(--red); }
+.action-btn { padding:5px 12px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--accent); font-size:11px; font-weight:600; cursor:pointer; transition:var(--transition); font-family:inherit; }
+.action-btn:hover { background:var(--accent); color:#0b1222; border-color:var(--accent); }
+
+/* ══════════════════════════════════════════════════
+   REVIEW SLIDE PANEL — the main new feature
+   ══════════════════════════════════════════════════ */
+
+.review-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:2000; opacity:0; pointer-events:none; transition:opacity 0.3s ease; }
+.review-overlay.open { opacity:1; pointer-events:all; }
+
+.review-panel { position:fixed; top:0; right:-620px; width:600px; max-width:100vw; height:100vh; background:var(--bg2); border-left:1px solid var(--border); z-index:2001; display:flex; flex-direction:column; transition:right 0.35s cubic-bezier(0.32, 0.72, 0, 1); box-shadow:var(--shadow-lg); }
+.review-panel.open { right:0; }
+
+.review-top { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; background:var(--bg3); }
+.review-top-left { display:flex; align-items:center; gap:12px; }
+.review-id { font-size:15px; font-weight:800; color:var(--accent); letter-spacing:-0.02em; }
+.review-dev { font-size:12px; color:var(--muted2); font-weight:500; }
+.review-close { width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted2); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:var(--transition); }
+.review-close:hover { background:var(--surface); color:var(--text); border-color:var(--border2); }
+
+.review-body { flex:1; overflow-y:auto; padding:20px; }
+.review-body::-webkit-scrollbar { width:3px; }
+.review-body::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+.review-section { margin-bottom:20px; }
+.review-section-title { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+
+/* detail grid */
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.detail-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px; }
+.detail-label { font-size:10px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+.detail-value { font-size:14px; font-weight:700; color:var(--text); letter-spacing:-0.01em; }
+.detail-value.highlight { color:var(--accent); }
+
+/* score donut */
+.score-donut-wrap { display:flex; align-items:center; gap:20px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px 20px; }
+.donut-container { position:relative; width:100px; height:100px; flex-shrink:0; }
+.donut-container svg { transform:rotate(-90deg); }
+.donut-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.donut-score { font-size:26px; font-weight:800; letter-spacing:-0.04em; }
+.donut-label { font-size:9px; color:var(--muted); font-weight:600; text-transform:uppercase; }
+.score-bars { flex:1; }
+.score-bar-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.score-bar-label { font-size:11px; color:var(--muted2); width:100px; flex-shrink:0; }
+.score-bar-track { flex:1; height:6px; background:var(--bg); border-radius:3px; overflow:hidden; }
+.score-bar-fill { height:100%; border-radius:3px; transition:width 0.8s cubic-bezier(0.4,0,0.2,1); }
+.score-bar-val { font-size:11px; font-weight:700; width:34px; text-align:right; flex-shrink:0; }
+
+/* conflict checks */
+.check-list { display:flex; flex-direction:column; gap:6px; }
+.check-item { display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:var(--radius); font-size:12px; font-weight:500; }
+.check-icon { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; flex-shrink:0; }
+.check-pass { background:var(--green-soft); color:var(--green); }
+.check-pass .check-icon { background:rgba(34,197,94,0.2); }
+.check-warn { background:var(--yellow-soft); color:var(--yellow); }
+.check-warn .check-icon { background:rgba(234,179,8,0.2); }
+.check-fail { background:var(--red-soft); color:var(--red); }
+.check-fail .check-icon { background:rgba(239,68,68,0.2); }
+
+/* goto zone banner */
+.goto-banner { background:linear-gradient(135deg, rgba(34,197,94,0.12), rgba(34,197,94,0.04)); border:1px solid rgba(34,197,94,0.2); border-radius:var(--radius); padding:12px 14px; display:flex; align-items:center; gap:10px; font-size:12px; color:var(--green); }
+.goto-banner-icon { width:28px; height:28px; background:rgba(34,197,94,0.15); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; }
+
+/* map mini */
+.review-map-container { width:100%; height:200px; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border); }
+
+/* comments */
+.comment-input-wrap { display:flex; gap:8px; margin-bottom:14px; }
+.comment-input { flex:1; padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); color:var(--text); font-size:12px; font-family:inherit; resize:none; outline:none; transition:var(--transition); min-height:40px; }
+.comment-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(56,189,248,0.08); }
+.comment-input::placeholder { color:var(--muted); }
+.comment-send { width:40px; height:40px; border-radius:var(--radius); border:none; background:var(--accent); color:#0b1222; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:var(--transition); flex-shrink:0; }
+.comment-send:hover { background:var(--accent2); }
+
+.comments-timeline { display:flex; flex-direction:column; gap:10px; }
+.comment-entry { padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); }
+.comment-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+.comment-author { font-size:11px; font-weight:700; color:var(--text); }
+.comment-time { font-size:10px; color:var(--muted); }
+.comment-text { font-size:12px; color:var(--muted2); line-height:1.5; }
+.comment-entry.system-comment { border-left:3px solid var(--accent); }
+.comment-entry.system-comment .comment-author { color:var(--accent); }
+
+/* review history */
+.history-timeline { position:relative; padding-left:20px; }
+.history-timeline::before { content:''; position:absolute; left:6px; top:4px; bottom:4px; width:1px; background:var(--border); }
+.history-entry { position:relative; margin-bottom:12px; }
+.history-dot { position:absolute; left:-20px; top:4px; width:13px; height:13px; border-radius:50%; border:2px solid var(--bg2); }
+.history-dot.dot-approved { background:var(--green); }
+.history-dot.dot-pending { background:var(--yellow); }
+.history-dot.dot-review { background:var(--accent); }
+.history-dot.dot-rejected { background:var(--red); }
+.history-dot.dot-submitted { background:var(--muted); }
+.history-label { font-size:12px; font-weight:600; color:var(--text2); }
+.history-detail { font-size:11px; color:var(--muted); margin-top:2px; }
+
+/* ── Footer Actions ── */
+.review-footer { padding:16px 20px; border-top:1px solid var(--border); background:var(--bg3); flex-shrink:0; }
+.review-actions { display:flex; gap:8px; }
+.review-actions .btn { width:auto; flex:1; padding:10px 16px; font-size:12px; display:flex; align-items:center; justify-content:center; gap:6px; }
+.btn-approve { background:var(--green); color:#fff; }
+.btn-approve:hover { background:#16a34a; box-shadow:0 2px 12px rgba(34,197,94,0.3); }
+.btn-reject { background:var(--red); color:#fff; }
+.btn-reject:hover { background:#dc2626; box-shadow:0 2px 12px rgba(239,68,68,0.3); }
+.btn-info { background:var(--yellow); color:#0b1222; }
+.btn-info:hover { background:#ca8a04; }
+.btn-back { background:transparent; border:1px solid var(--border); color:var(--muted2); }
+.btn-back:hover { border-color:var(--accent); color:var(--accent); }
+
+/* ── Toast Notification ── */
+.toast { position:fixed; bottom:24px; right:24px; padding:12px 20px; border-radius:var(--radius); font-size:13px; font-weight:600; color:#fff; z-index:3000; transform:translateY(80px); opacity:0; transition:all 0.4s cubic-bezier(0.32,0.72,0,1); pointer-events:none; display:flex; align-items:center; gap:8px; box-shadow:var(--shadow-lg); }
+.toast.show { transform:translateY(0); opacity:1; }
+.toast-success { background:var(--green); }
+.toast-error { background:var(--red); }
+.toast-warning { background:var(--yellow); color:#0b1222; }
+
+/* ── Status changed animation ── */
+@keyframes rowFlash { 0% { background:rgba(56,189,248,0.15); } 100% { background:transparent; } }
+.row-updated { animation:rowFlash 1.5s ease; }
+
+/* ── Footer Attribution ── */
+.attribution { position:fixed; bottom:8px; left:50%; transform:translateX(-50%); font-size:10px; color:var(--muted); z-index:10; opacity:0.6; }
+.attribution a { color:var(--muted); text-decoration:none; }
+.attribution a:hover { color:var(--accent); }
 </style>
 </head>
 <body>
 
 <nav class="navbar">
   <div class="nav-brand">
-    <div class="nav-logo">GIS</div>
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+        <polyline points="2 17 12 22 22 17"/>
+        <polyline points="2 12 12 17 22 12"/>
+      </svg>
+    </div>
     <div>
-      <div class="nav-title">NREDCAP AI Land Allocation Platform</div>
+      <div class="nav-title">NREDCAP AI Land Allocation</div>
       <div class="nav-subtitle">Anantapur District, Andhra Pradesh</div>
     </div>
   </div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchView('developer',event)">🏗 Developer View</button>
-    <button class="nav-tab" onclick="switchView('officer',event)">🏛 Officer View</button>
+    <button class="nav-tab active" onclick="switchView('developer',event)">Developer</button>
+    <button class="nav-tab" onclick="switchView('officer',event)">Officer</button>
   </div>
   <div class="nav-right">
-    <span class="badge">● LIVE DEMO</span>
-    <span>IndiaAI Challenge 2026</span>
+    <span class="badge-live">LIVE DEMO</span>
+    <span style="font-weight:600;">IndiaAI 2026</span>
   </div>
 </nav>
 
-<!-- DEVELOPER VIEW -->
+<!-- ══════════ DEVELOPER VIEW ══════════ -->
 <div class="main" id="developerView">
   <div class="sidebar">
     <div class="sidebar-header">
-      <h3>🔍 Parcel Assessment</h3>
+      <h3>Parcel Assessment</h3>
       <p>Enter parcel details to run AI suitability check</p>
     </div>
     <div class="sidebar-body">
@@ -188,31 +373,32 @@ tbody tr:hover { background:var(--bg2); }
             <option value="hybrid">Solar-Wind Hybrid</option>
           </select>
         </div>
-        <button class="btn btn-primary" onclick="runAssessment()">▶ Run AI Assessment</button>
-        <button class="btn btn-secondary" onclick="clearAssessment()">✕ Clear</button>
+        <button class="btn btn-primary" onclick="runAssessment()">Run AI Assessment</button>
+        <button class="btn btn-secondary" onclick="clearAssessment()">Clear</button>
 
         <div class="layer-toggles">
           <div class="form-label" style="margin-top:14px;">Map Layers</div>
           <div class="layer-toggle" onclick="toggleLayer('gotozones',this)">
-            <span>🟢 Go-To Zones</span>
+            <span>Go-To Zones</span>
             <div class="toggle-switch on"><div class="toggle-knob"></div></div>
           </div>
           <div class="layer-toggle" onclick="toggleLayer('protected',this)">
-            <span>🔴 Protected Areas</span>
+            <span>Protected Areas</span>
             <div class="toggle-switch on"><div class="toggle-knob"></div></div>
           </div>
           <div class="layer-toggle" onclick="toggleLayer('grid',this)">
-            <span>🔵 Grid Lines</span>
+            <span>Grid Lines</span>
             <div class="toggle-switch on"><div class="toggle-knob"></div></div>
           </div>
           <div class="layer-toggle" onclick="toggleLayer('solar',this)">
-            <span>🟡 Solar Resource</span>
+            <span>Solar Resource</span>
             <div class="toggle-switch"><div class="toggle-knob"></div></div>
           </div>
         </div>
 
         <div class="legend">
           <div class="legend-title">Map Legend</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#38bdf8;opacity:0.5;border:1px dashed #38bdf8"></div> District Boundary</div>
           <div class="legend-item"><div class="legend-dot" style="background:#22c55e;opacity:0.7"></div> Go-To Zone (Fast-Track)</div>
           <div class="legend-item"><div class="legend-dot" style="background:#ef4444;opacity:0.6"></div> Protected / Restricted Area</div>
           <div class="legend-item"><div class="legend-dot" style="background:#38bdf8;"></div> 220kV Grid Line</div>
@@ -224,7 +410,7 @@ tbody tr:hover { background:var(--bg2); }
       <div id="mapTab" class="hidden">
         <div class="info-box">
           <strong>Draw Mode Active</strong><br>
-          Click on the map to place boundary points. Double-click to complete the polygon. The AI engine will automatically assess the drawn area.
+          Click on the map to place boundary points. Double-click to complete the polygon.
         </div>
         <div class="form-group" style="margin-top:14px;">
           <label class="form-label">Technology Type</label>
@@ -234,8 +420,8 @@ tbody tr:hover { background:var(--bg2); }
             <option value="hybrid">Solar-Wind Hybrid</option>
           </select>
         </div>
-        <button class="btn btn-primary" onclick="startDraw()">✏ Start Drawing</button>
-        <button class="btn btn-secondary" onclick="clearDraw()">✕ Clear Drawing</button>
+        <button class="btn btn-primary" onclick="startDraw()">Start Drawing</button>
+        <button class="btn btn-secondary" onclick="clearDraw()">Clear Drawing</button>
       </div>
 
       <div id="resultPanel" class="hidden">
@@ -264,9 +450,9 @@ tbody tr:hover { background:var(--bg2); }
           </div>
           <div class="conflict-list" id="conflictList"></div>
           <div id="gotoZoneNotice" class="hidden" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:6px;padding:10px;margin-top:12px;font-size:12px;color:#22c55e;">
-            ✅ <strong>Go-To Zone:</strong> This parcel falls within a pre-approved go-to zone. Eligible for <strong>fast-track approval</strong>.
+            <strong>Go-To Zone:</strong> This parcel falls within a pre-approved go-to zone. Eligible for fast-track approval.
           </div>
-          <button class="btn btn-secondary" style="margin-top:14px;font-size:12px;" onclick="downloadReport()">⬇ Download PDF Report</button>
+          <button class="btn btn-secondary" style="margin-top:14px;font-size:11px;" onclick="downloadReport()">Download PDF Report</button>
         </div>
       </div>
 
@@ -275,20 +461,20 @@ tbody tr:hover { background:var(--bg2); }
   <div id="map"></div>
 </div>
 
-<!-- OFFICER VIEW -->
+<!-- ══════════ OFFICER VIEW ══════════ -->
 <div class="main hidden" id="officerView">
   <div class="officer-panel">
     <div class="officer-header">
       <div>
-        <h3>📋 Application Review Dashboard — Anantapur District</h3>
-        <p style="font-size:12px;color:var(--muted);margin-top:2px;">NREDCAP Officer Portal · All RE Land Allocation Applications</p>
+        <h3>Application Review Dashboard</h3>
+        <p>NREDCAP Officer Portal &middot; Anantapur District RE Allocations</p>
       </div>
-      <div class="officer-stats">
-        <div class="stat-pill"><div class="stat-num">24</div><div class="stat-lbl">Total</div></div>
-        <div class="stat-pill"><div class="stat-num" style="color:#eab308">8</div><div class="stat-lbl">Pending</div></div>
-        <div class="stat-pill"><div class="stat-num" style="color:#22c55e">12</div><div class="stat-lbl">Approved</div></div>
-        <div class="stat-pill"><div class="stat-num" style="color:#38bdf8">3</div><div class="stat-lbl">In Review</div></div>
-        <div class="stat-pill"><div class="stat-num" style="color:#ef4444">1</div><div class="stat-lbl">Rejected</div></div>
+      <div class="officer-stats" id="officerStats">
+        <div class="stat-pill"><div class="stat-num" id="statTotal">24</div><div class="stat-lbl">Total</div></div>
+        <div class="stat-pill"><div class="stat-num" style="color:#eab308" id="statPending">8</div><div class="stat-lbl">Pending</div></div>
+        <div class="stat-pill"><div class="stat-num" style="color:#22c55e" id="statApproved">12</div><div class="stat-lbl">Approved</div></div>
+        <div class="stat-pill"><div class="stat-num" style="color:#38bdf8" id="statReview">3</div><div class="stat-lbl">In Review</div></div>
+        <div class="stat-pill"><div class="stat-num" style="color:#ef4444" id="statRejected">1</div><div class="stat-lbl">Rejected</div></div>
       </div>
     </div>
     <div class="table-wrap">
@@ -296,8 +482,8 @@ tbody tr:hover { background:var(--bg2); }
         <thead>
           <tr>
             <th>App ID</th><th>Developer</th><th>Mandal</th><th>Survey No.</th>
-            <th>Area (Acres)</th><th>Technology</th><th>AI Score</th>
-            <th>Go-To Zone</th><th>Conflicts</th><th>Status</th><th>Action</th>
+            <th>Area</th><th>Technology</th><th>AI Score</th>
+            <th>Go-To</th><th>Conflicts</th><th>Status</th><th>Action</th>
           </tr>
         </thead>
         <tbody id="officerTable"></tbody>
@@ -306,7 +492,38 @@ tbody tr:hover { background:var(--bg2); }
   </div>
 </div>
 
+<!-- ══════════ REVIEW SLIDE-OUT PANEL ══════════ -->
+<div class="review-overlay" id="reviewOverlay" onclick="closeReviewPanel()"></div>
+<div class="review-panel" id="reviewPanel">
+  <div class="review-top">
+    <div class="review-top-left">
+      <div>
+        <div class="review-id" id="rpAppId">NRD-2026-001</div>
+        <div class="review-dev" id="rpDeveloper">Tata Power RE Ltd</div>
+      </div>
+    </div>
+    <button class="review-close" onclick="closeReviewPanel()" aria-label="Close">&times;</button>
+  </div>
+
+  <div class="review-body" id="reviewBody">
+    <!-- Content injected dynamically -->
+  </div>
+
+  <div class="review-footer" id="reviewFooter">
+    <!-- Buttons injected dynamically -->
+  </div>
+</div>
+
+<!-- ══════════ TOAST ══════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- Attribution -->
+<div class="attribution">
+  <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a>
+</div>
+
 <script>
+// ═══════════ DATA ═══════════
 const villages = {
   "Anantapur":["Anantapur Urban","Anantapur Rural","Kamalanagar","Subedari","Ramnagar"],
   "Hindupur":["Hindupur","Pendekallu","Lepakshi","Bommajipalli","Tekulodu"],
@@ -319,6 +536,7 @@ const villages = {
   "Kambadur":["Ralla","Kambadur","Gooty","Bathalapalle","Peddapappur"],
   "Brahmasamudram":["Brahmasamudram","Narpala","Garladinne","Vajrakarur","Roddam"],
 };
+
 const gotoZones=[
   [[14.95,77.45],[15.05,77.45],[15.05,77.60],[14.95,77.60]],
   [[14.60,77.20],[14.72,77.20],[14.72,77.38],[14.60,77.38]],
@@ -344,35 +562,59 @@ const mandalCenters={
   "Tadpatri":{lat:14.909,lng:78.007,solar:84,grid:16,land:68,slope:87},
   "Brahmasamudram":{lat:14.76,lng:77.40,solar:91,grid:8,land:82,slope:92},
 };
+
 const applications=[
-  {id:"NRD-2026-001",dev:"Tata Power RE Ltd",mandal:"Kambadur",survey:"156/B",area:1200,tech:"Solar PV",score:92,goto:true,conflicts:0,status:"approved"},
-  {id:"NRD-2026-002",dev:"Adani Green Energy",mandal:"Guntakal",survey:"89/A",area:800,tech:"Solar PV",score:88,goto:true,conflicts:0,status:"approved"},
-  {id:"NRD-2026-003",dev:"ReNew Power",mandal:"Brahmasamudram",survey:"342",area:600,tech:"Wind",score:76,goto:false,conflicts:1,status:"review"},
-  {id:"NRD-2026-004",dev:"Greenko Energy",mandal:"Anantapur",survey:"211/C",area:400,tech:"Solar PV",score:81,goto:false,conflicts:0,status:"pending"},
-  {id:"NRD-2026-005",dev:"NTPC Renewable",mandal:"Rayadurg",survey:"78",area:2000,tech:"Solar-Wind Hybrid",score:85,goto:true,conflicts:0,status:"approved"},
-  {id:"NRD-2026-006",dev:"Mahindra Susten",mandal:"Kadiri",survey:"443/A",area:300,tech:"Solar PV",score:61,goto:false,conflicts:2,status:"rejected"},
-  {id:"NRD-2026-007",dev:"Avaada Energy",mandal:"Dharmavaram",survey:"167",area:550,tech:"Solar PV",score:84,goto:false,conflicts:0,status:"pending"},
-  {id:"NRD-2026-008",dev:"Torrent Power",mandal:"Kalyandurg",survey:"290/B",area:750,tech:"Wind",score:79,goto:true,conflicts:0,status:"approved"},
-  {id:"NRD-2026-009",dev:"Azure Power",mandal:"Guntakal",survey:"512",area:900,tech:"Solar PV",score:90,goto:true,conflicts:0,status:"approved"},
-  {id:"NRD-2026-010",dev:"Hero Future Energies",mandal:"Tadpatri",survey:"33/A",area:420,tech:"Solar PV",score:72,goto:false,conflicts:1,status:"pending"},
-  {id:"NRD-2026-011",dev:"CleanMax Solar",mandal:"Anantapur",survey:"88",area:180,tech:"Solar PV",score:78,goto:false,conflicts:0,status:"review"},
-  {id:"NRD-2026-012",dev:"Sprng Energy",mandal:"Kambadur",survey:"203/C",area:1500,tech:"Solar-Wind Hybrid",score:94,goto:true,conflicts:0,status:"approved"},
-  {id:"NRD-2026-013",dev:"Engie India",mandal:"Brahmasamudram",survey:"67/B",area:650,tech:"Solar PV",score:88,goto:true,conflicts:0,status:"pending"},
-  {id:"NRD-2026-014",dev:"Ayana Renewable",mandal:"Hindupur",survey:"129",area:280,tech:"Wind",score:65,goto:false,conflicts:1,status:"review"},
+  {id:"NRD-2026-001",dev:"Tata Power RE Ltd",mandal:"Kambadur",survey:"156/B",area:1200,tech:"Solar PV",score:92,goto:true,conflicts:0,status:"approved",filedDate:"2026-01-12",lastReview:"2026-02-05",officer:"V. Krishnamurthy",comments:[{author:"System",text:"Application submitted via online portal",time:"Jan 12, 2026 09:15"},{author:"V. Krishnamurthy",text:"AI score verified. Go-To Zone confirmed. Fast-track eligible.",time:"Jan 28, 2026 14:30"},{author:"V. Krishnamurthy",text:"Approved — routed to Green Channel.",time:"Feb 5, 2026 11:00"}]},
+  {id:"NRD-2026-002",dev:"Adani Green Energy",mandal:"Guntakal",survey:"89/A",area:800,tech:"Solar PV",score:88,goto:true,conflicts:0,status:"approved",filedDate:"2026-01-15",lastReview:"2026-02-08",officer:"S. Raghavan",comments:[{author:"System",text:"Application submitted via online portal",time:"Jan 15, 2026 10:45"},{author:"S. Raghavan",text:"Approved. No conflicts detected.",time:"Feb 8, 2026 16:20"}]},
+  {id:"NRD-2026-003",dev:"ReNew Power",mandal:"Brahmasamudram",survey:"342",area:600,tech:"Wind",score:76,goto:false,conflicts:1,status:"review",filedDate:"2026-01-18",lastReview:"2026-03-02",officer:"P. Suresh",comments:[{author:"System",text:"Application submitted via online portal",time:"Jan 18, 2026 11:30"},{author:"P. Suresh",text:"1 conflict detected — proximity to existing wind corridor. Requesting additional environmental impact report.",time:"Mar 2, 2026 09:45"}]},
+  {id:"NRD-2026-004",dev:"Greenko Energy",mandal:"Anantapur",survey:"211/C",area:400,tech:"Solar PV",score:81,goto:false,conflicts:0,status:"pending",filedDate:"2026-01-22",lastReview:null,officer:null,comments:[{author:"System",text:"Application submitted via online portal",time:"Jan 22, 2026 14:00"}]},
+  {id:"NRD-2026-005",dev:"NTPC Renewable",mandal:"Rayadurg",survey:"78",area:2000,tech:"Solar-Wind Hybrid",score:85,goto:true,conflicts:0,status:"approved",filedDate:"2026-01-25",lastReview:"2026-02-15",officer:"V. Krishnamurthy",comments:[{author:"System",text:"Application submitted via online portal",time:"Jan 25, 2026 08:30"},{author:"V. Krishnamurthy",text:"Large parcel — site inspection completed. Approved for hybrid setup.",time:"Feb 15, 2026 12:00"}]},
+  {id:"NRD-2026-006",dev:"Mahindra Susten",mandal:"Kadiri",survey:"443/A",area:300,tech:"Solar PV",score:61,goto:false,conflicts:2,status:"rejected",filedDate:"2026-01-28",lastReview:"2026-02-20",officer:"S. Raghavan",comments:[{author:"System",text:"Application submitted via online portal",time:"Jan 28, 2026 16:00"},{author:"S. Raghavan",text:"Low AI score. 2 conflicts — protected area overlap and poor grid proximity. Rejected.",time:"Feb 20, 2026 10:30"}]},
+  {id:"NRD-2026-007",dev:"Avaada Energy",mandal:"Dharmavaram",survey:"167",area:550,tech:"Solar PV",score:84,goto:false,conflicts:0,status:"pending",filedDate:"2026-02-01",lastReview:null,officer:null,comments:[{author:"System",text:"Application submitted via online portal",time:"Feb 1, 2026 09:00"}]},
+  {id:"NRD-2026-008",dev:"Torrent Power",mandal:"Kalyandurg",survey:"290/B",area:750,tech:"Wind",score:79,goto:true,conflicts:0,status:"approved",filedDate:"2026-02-03",lastReview:"2026-02-25",officer:"P. Suresh",comments:[{author:"System",text:"Application submitted via online portal",time:"Feb 3, 2026 11:15"},{author:"P. Suresh",text:"Go-To Zone confirmed. Wind resource adequate. Approved.",time:"Feb 25, 2026 15:40"}]},
+  {id:"NRD-2026-009",dev:"Azure Power",mandal:"Guntakal",survey:"512",area:900,tech:"Solar PV",score:90,goto:true,conflicts:0,status:"approved",filedDate:"2026-02-05",lastReview:"2026-02-28",officer:"V. Krishnamurthy",comments:[{author:"System",text:"Application submitted via online portal",time:"Feb 5, 2026 10:00"},{author:"V. Krishnamurthy",text:"Excellent score. Green Channel routing.",time:"Feb 28, 2026 13:20"}]},
+  {id:"NRD-2026-010",dev:"Hero Future Energies",mandal:"Tadpatri",survey:"33/A",area:420,tech:"Solar PV",score:72,goto:false,conflicts:1,status:"pending",filedDate:"2026-02-08",lastReview:null,officer:null,comments:[{author:"System",text:"Application submitted via online portal",time:"Feb 8, 2026 14:30"}]},
+  {id:"NRD-2026-011",dev:"CleanMax Solar",mandal:"Anantapur",survey:"88",area:180,tech:"Solar PV",score:78,goto:false,conflicts:0,status:"review",filedDate:"2026-02-10",lastReview:"2026-03-05",officer:"S. Raghavan",comments:[{author:"System",text:"Application submitted via online portal",time:"Feb 10, 2026 09:45"},{author:"S. Raghavan",text:"Small parcel size. Checking minimum viability requirements.",time:"Mar 5, 2026 11:15"}]},
+  {id:"NRD-2026-012",dev:"Sprng Energy",mandal:"Kambadur",survey:"203/C",area:1500,tech:"Solar-Wind Hybrid",score:94,goto:true,conflicts:0,status:"approved",filedDate:"2026-02-12",lastReview:"2026-03-01",officer:"V. Krishnamurthy",comments:[{author:"System",text:"Application submitted via online portal",time:"Feb 12, 2026 08:00"},{author:"V. Krishnamurthy",text:"Highest AI score in batch. Green Channel fast-track approved.",time:"Mar 1, 2026 10:00"}]},
+  {id:"NRD-2026-013",dev:"Engie India",mandal:"Brahmasamudram",survey:"67/B",area:650,tech:"Solar PV",score:88,goto:true,conflicts:0,status:"pending",filedDate:"2026-02-15",lastReview:null,officer:null,comments:[{author:"System",text:"Application submitted via online portal",time:"Feb 15, 2026 12:30"}]},
+  {id:"NRD-2026-014",dev:"Ayana Renewable",mandal:"Hindupur",survey:"129",area:280,tech:"Wind",score:65,goto:false,conflicts:1,status:"review",filedDate:"2026-02-18",lastReview:"2026-03-10",officer:"P. Suresh",comments:[{author:"System",text:"Application submitted via online portal",time:"Feb 18, 2026 15:00"},{author:"P. Suresh",text:"Borderline score. 1 conflict — checking land dispute records in Hindupur mandal.",time:"Mar 10, 2026 14:15"}]},
 ];
 
-let map,gotoLayer,protectedLayer,gridLayer,solarLayer,parcelMarker,drawnPolygon;
+// ═══════════ ANANTAPUR DISTRICT BOUNDARY (OSM) ═══════════
+const districtBoundary={"type":"Feature","properties":{"name":"Anantapuram District"},"geometry":{"type":"Polygon","coordinates":[[[76.7601,14.9896],[76.7667,14.9745],[76.8174,14.9692],[76.8289,14.9561],[76.8416,14.9661],[76.8673,14.9695],[76.8638,14.8955],[76.8474,14.8959],[76.8455,14.8896],[76.8571,14.8692],[76.8536,14.8427],[76.842,14.8368],[76.8543,14.8098],[76.8373,14.811],[76.8366,14.7909],[76.7823,14.7861],[76.8036,14.7425],[76.7753,14.681],[76.765,14.602],[76.782,14.5965],[76.7913,14.5543],[76.8065,14.5311],[76.8312,14.5307],[76.8558,14.5094],[76.868,14.474],[76.9007,14.4893],[76.9748,14.4853],[76.9599,14.4505],[76.9447,14.4508],[76.9426,14.4003],[76.9157,14.4207],[76.8853,14.3921],[76.885,14.3474],[76.9034,14.3225],[76.9457,14.313],[76.9565,14.2943],[76.9248,14.2737],[76.9457,14.2422],[76.9858,14.2472],[77.0057,14.2358],[77.0508,14.2456],[77.0813,14.2142],[77.1147,14.2231],[77.1204,14.2629],[77.1107,14.2615],[77.1153,14.2921],[77.1309,14.3077],[77.1356,14.3367],[77.1572,14.3421],[77.1982,14.3209],[77.2377,14.3174],[77.2866,14.3402],[77.2835,14.2829],[77.3573,14.2766],[77.3494,14.3081],[77.3417,14.3021],[77.32,14.3115],[77.3168,14.334],[77.3278,14.337],[77.3321,14.3526],[77.3163,14.381],[77.3191,14.4104],[77.3329,14.4522],[77.3631,14.4619],[77.359,14.4835],[77.3772,14.4983],[77.3561,14.5388],[77.3902,14.5537],[77.416,14.5507],[77.4708,14.5666],[77.4783,14.533],[77.4718,14.5148],[77.4864,14.4749],[77.4914,14.4715],[77.5179,14.4889],[77.5315,14.485],[77.5455,14.4605],[77.571,14.4622],[77.5715,14.4524],[77.6099,14.46],[77.6162,14.4778],[77.6363,14.4896],[77.655,14.4826],[77.6674,14.487],[77.6771,14.5055],[77.6497,14.5183],[77.6545,14.5363],[77.6938,14.5374],[77.704,14.5457],[77.7144,14.5759],[77.7362,14.5765],[77.7371,14.5926],[77.7734,14.5951],[77.8043,14.6155],[77.8176,14.6007],[77.8521,14.6001],[77.8551,14.6084],[77.84,14.6125],[77.8551,14.6137],[77.8501,14.6377],[77.8697,14.654],[77.8791,14.6435],[77.8938,14.6481],[77.983,14.6211],[77.9904,14.6119],[77.9821,14.5957],[77.9886,14.5702],[77.9807,14.5683],[77.9837,14.5446],[78.0333,14.5311],[78.0444,14.5468],[78.038,14.5639],[78.0645,14.5729],[78.0882,14.6309],[78.1219,14.6239],[78.1194,14.6344],[78.1294,14.6488],[78.1346,14.6957],[78.1096,14.6927],[78.1093,14.7015],[78.0965,14.7013],[78.0922,14.7148],[78.0666,14.7159],[78.0763,14.753],[78.0462,14.773],[78.0657,14.7975],[78.0764,14.8275],[78.1012,14.8174],[78.1137,14.8509],[78.0892,14.8579],[78.0944,14.8848],[78.1131,14.9313],[78.1359,14.9416],[78.1343,14.9606],[78.0873,14.9725],[78.0884,14.9826],[78.0606,15.0031],[78.0546,14.9925],[78.0343,14.9996],[78.0267,15.0169],[78.0107,15.0282],[78.0107,15.051],[77.9951,15.0648],[78.0139,15.1137],[77.9942,15.1326],[77.9742,15.1393],[77.9613,15.1092],[77.906,15.1233],[77.9068,15.1308],[77.9155,15.1289],[77.91,15.1402],[77.9244,15.1524],[77.9194,15.1743],[77.9047,15.1783],[77.8847,15.1789],[77.8753,15.1357],[77.8428,15.13],[77.8389,15.1453],[77.8159,15.1433],[77.7919,15.1065],[77.7709,15.1142],[77.7741,15.1246],[77.7484,15.1306],[77.7469,15.1412],[77.7306,15.1515],[77.7331,15.169],[77.7165,15.1728],[77.7119,15.1873],[77.6949,15.1828],[77.6978,15.2062],[77.6648,15.2339],[77.6372,15.2214],[77.6344,15.2069],[77.615,15.2065],[77.6112,15.1839],[77.5875,15.1859],[77.5758,15.1997],[77.5424,15.209],[77.5272,15.2242],[77.5022,15.222],[77.4808,15.2083],[77.4513,15.2221],[77.4499,15.2054],[77.4345,15.2102],[77.4259,15.2236],[77.4092,15.2257],[77.395,15.2174],[77.3631,15.2233],[77.3517,15.178],[77.3164,15.1772],[77.3102,15.1548],[77.2999,15.1544],[77.292,15.1312],[77.2713,15.131],[77.2643,15.1429],[77.23,15.1441],[77.2023,15.1599],[77.1881,15.1575],[77.1801,15.1432],[77.1582,15.1463],[77.1501,15.1117],[77.13,15.1004],[77.1196,15.0458],[77.1128,15.0339],[77.0848,15.0307],[77.0826,15.0061],[77.0443,15.0099],[77.0496,15.0331],[77.0041,15.0338],[76.9861,15.0265],[76.9853,15.0156],[76.9184,15.0358],[76.8773,15.0306],[76.8661,15.06],[76.8004,15.0962],[76.7779,15.0799],[76.7737,15.0644],[76.7902,15.0207],[76.7879,15.0095],[76.7721,14.9905],[76.7601,14.9896]]]}}
+
+// Helper: add district boundary to any Leaflet map
+function addDistrictBoundary(targetMap){
+  return L.geoJSON(districtBoundary,{
+    style:{
+      color:'#38bdf8',
+      weight:2,
+      opacity:0.6,
+      fillColor:'#38bdf8',
+      fillOpacity:0.03,
+      dashArray:'6,3'
+    }
+  }).bindPopup('<b style="color:#38bdf8">Anantapuram District</b><br>Andhra Pradesh').addTo(targetMap);
+}
+
+// ═══════════ MAP SETUP ═══════════
+let map,gotoLayer,protectedLayer,gridLayer,solarLayer,parcelMarker,drawnPolygon,districtLayer;
 let layerState={gotozones:true,protected:true,grid:true,solar:false};
 let drawPoints=[],drawMarkers=[];
+let reviewMiniMap=null;
 
 window.onload=function(){
-  map=L.map('map',{center:[14.68,77.60],zoom:9});
+  map=L.map('map',{center:[14.68,77.60],zoom:9,zoomControl:false});
+  L.control.zoom({position:'topright'}).addTo(map);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:18}).addTo(map);
+
+  // District boundary — added first so it sits behind all other layers
+  districtLayer=addDistrictBoundary(map);
 
   gotoLayer=L.layerGroup();
   gotoZones.forEach((c,i)=>{
     L.polygon(c,{color:'#22c55e',fillColor:'#22c55e',fillOpacity:0.18,weight:2,dashArray:'6,4'})
-      .bindPopup(`<b style="color:#22c55e">Go-To Zone ${i+1}</b><br>Fast-Track Eligible<br>High Solar Potential`).addTo(gotoLayer);
+      .bindPopup(`<b style="color:#22c55e">Go-To Zone ${i+1}</b><br>Fast-Track Eligible`).addTo(gotoLayer);
   });
   gotoLayer.addTo(map);
 
@@ -393,7 +635,7 @@ window.onload=function(){
   solarLayer=L.layerGroup();
   [[15.0,77.5,95],[14.85,77.35,91],[14.65,77.60,88],[14.45,77.25,86],[14.15,77.90,82]].forEach(([lat,lng,val])=>{
     L.circle([lat,lng],{radius:18000,color:'#eab308',fillColor:'#eab308',fillOpacity:0.12,weight:1})
-      .bindPopup(`Solar GHI: ~${val+5.5} MJ/m²/day`).addTo(solarLayer);
+      .bindPopup(`Solar GHI: ~${val+5.5} MJ/m\u00b2/day`).addTo(solarLayer);
   });
 
   [[15.01,77.52,'Ralla Solar Park 2400MW','#a855f7'],[14.70,77.59,'Anantapur Solar 100MW','#a855f7']].forEach(([lat,lng,name,col])=>{
@@ -404,6 +646,7 @@ window.onload=function(){
   populateOfficerTable();
 };
 
+// ═══════════ NAVIGATION ═══════════
 function switchSideTab(tab,el){
   document.querySelectorAll('.stab').forEach(e=>e.classList.remove('active'));
   el.classList.add('active');
@@ -428,10 +671,11 @@ function updateVillages(){
   });
 }
 
+// ═══════════ DEVELOPER ASSESSMENT ═══════════
 function runAssessment(){
   const mandal=document.getElementById('mandalSelect').value;
   const survey=document.getElementById('surveyNum').value||'---';
-  if(!mandal){alert('Please select a Mandal first.');return;}
+  if(!mandal){showToast('Please select a Mandal first.','warning');return;}
   const d=mandalCenters[mandal]||{lat:14.68,lng:77.60,solar:85,grid:15,land:72,slope:88};
   const solarScore=d.solar,gridScore=Math.max(10,100-d.grid*3),landScore=d.land,accessScore=d.slope;
   const total=Math.round(solarScore*0.35+gridScore*0.30+landScore*0.20+accessScore*0.15);
@@ -457,11 +701,11 @@ function runAssessment(){
   document.getElementById('accessVal').textContent=accessScore+'%';document.getElementById('accessBar').style.width=accessScore+'%';
 
   document.getElementById('conflictList').innerHTML=`
-    <div class="conflict-item ${inProtected?'conflict-err':'conflict-ok'}"><div class="conflict-dot ${inProtected?'dot-red':'dot-green'}"></div>Protected area overlap: ${inProtected?'⚠ CONFLICT':'✓ Clear'}</div>
-    <div class="conflict-item conflict-ok"><div class="conflict-dot dot-green"></div>Existing RE project overlap: ✓ Clear</div>
-    <div class="conflict-item ${nearGrid?'conflict-ok':'conflict-warn'}"><div class="conflict-dot ${nearGrid?'dot-green':'dot-yellow'}"></div>Grid proximity (${d.grid} km): ${nearGrid?'✓ Excellent':'⚠ Moderate'}</div>
-    <div class="conflict-item conflict-ok"><div class="conflict-dot dot-green"></div>Land dispute records: ✓ None found</div>
-    <div class="conflict-item conflict-ok"><div class="conflict-dot dot-green"></div>Environmental clearance zone: ✓ Clear</div>`;
+    <div class="conflict-item ${inProtected?'conflict-err':'conflict-ok'}"><div class="conflict-dot ${inProtected?'dot-red':'dot-green'}"></div>Protected area overlap: ${inProtected?'CONFLICT':'Clear'}</div>
+    <div class="conflict-item conflict-ok"><div class="conflict-dot dot-green"></div>Existing RE overlap: Clear</div>
+    <div class="conflict-item ${nearGrid?'conflict-ok':'conflict-warn'}"><div class="conflict-dot ${nearGrid?'dot-green':'dot-yellow'}"></div>Grid proximity (${d.grid} km): ${nearGrid?'Excellent':'Moderate'}</div>
+    <div class="conflict-item conflict-ok"><div class="conflict-dot dot-green"></div>Land disputes: None found</div>
+    <div class="conflict-item conflict-ok"><div class="conflict-dot dot-green"></div>Environmental clearance: Clear</div>`;
 
   document.getElementById('gotoZoneNotice').classList.toggle('hidden',!inGoto);
   rp.scrollIntoView({behavior:'smooth'});
@@ -484,7 +728,7 @@ function toggleLayer(name,el){
 }
 
 function startDraw(){
-  alert('Draw mode: Click on the map to add polygon points. Double-click to finish.');
+  showToast('Draw mode active — click to add points, double-click to finish.','success');
   map.on('click',onMapClick);map.on('dblclick',finishDraw);
 }
 function onMapClick(e){
@@ -492,7 +736,7 @@ function onMapClick(e){
   drawMarkers.push(L.circleMarker(e.latlng,{radius:5,color:'#f97316'}).addTo(map));
   if(drawPoints.length>2){if(drawnPolygon)map.removeLayer(drawnPolygon);drawnPolygon=L.polygon(drawPoints,{color:'#f97316',fillOpacity:0.2}).addTo(map);}
 }
-function finishDraw(){map.off('click',onMapClick);map.off('dblclick',finishDraw);alert(`Polygon drawn! Switch to "By Parcel ID" tab and click Run Assessment.`);}
+function finishDraw(){map.off('click',onMapClick);map.off('dblclick',finishDraw);showToast('Polygon complete. Switch to Parcel ID tab to run assessment.','success');}
 function clearDraw(){map.off('click',onMapClick);map.off('dblclick',finishDraw);drawMarkers.forEach(m=>map.removeLayer(m));drawMarkers=[];if(drawnPolygon){map.removeLayer(drawnPolygon);drawnPolygon=null;}drawPoints=[];}
 
 function downloadReport(){
@@ -504,26 +748,390 @@ function downloadReport(){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`NREDCAP_${mandal}_${survey.replace('/','_')}.txt`;a.click();
 }
 
+// ═══════════ OFFICER TABLE ═══════════
 function populateOfficerTable(){
   document.getElementById('officerTable').innerHTML=applications.map(a=>{
     const sc=a.score,col=sc>=80?'#22c55e':sc>=65?'#eab308':'#ef4444';
     const statMap={pending:'pill-pending',approved:'pill-approved',review:'pill-review',rejected:'pill-rejected'};
-    return `<tr>
-      <td style="color:#38bdf8;font-weight:600">${a.id}</td><td>${a.dev}</td><td>${a.mandal}</td>
-      <td style="font-family:monospace">${a.survey}</td><td>${a.area.toLocaleString()}</td><td>${a.tech}</td>
-      <td><span style="font-weight:700;color:${col}">${a.score}</span>/100</td>
-      <td>${a.goto?'<span style="color:#22c55e">✅ Yes</span>':'<span style="color:#94a3b8">—</span>'}</td>
-      <td>${a.conflicts===0?'<span style="color:#22c55e">✓ None</span>':'<span style="color:#ef4444">⚠ '+a.conflicts+'</span>'}</td>
-      <td><span class="status-pill ${statMap[a.status]}">${a.status.charAt(0).toUpperCase()+a.status.slice(1)}</span></td>
-      <td><button class="action-btn" onclick="reviewApp('${a.id}')">Review</button></td></tr>`;
+    const statLabel={pending:'Pending',approved:'Approved',review:'In Review',rejected:'Rejected'};
+    return `<tr id="row-${a.id}">
+      <td style="color:#38bdf8;font-weight:700;font-size:11px;letter-spacing:0.01em">${a.id}</td>
+      <td style="font-weight:600">${a.dev}</td><td>${a.mandal}</td>
+      <td style="font-family:monospace;font-size:12px;color:var(--muted2)">${a.survey}</td>
+      <td>${a.area.toLocaleString()}</td><td>${a.tech}</td>
+      <td><span style="font-weight:800;color:${col}">${a.score}</span><span style="color:var(--muted);font-size:11px">/100</span></td>
+      <td>${a.goto?'<span style="color:#22c55e;font-weight:600">Yes</span>':'<span style="color:var(--muted)">—</span>'}</td>
+      <td>${a.conflicts===0?'<span style="color:#22c55e">None</span>':'<span style="color:#ef4444;font-weight:600">'+a.conflicts+'</span>'}</td>
+      <td><span class="status-pill ${statMap[a.status]}">${statLabel[a.status]}</span></td>
+      <td><button class="action-btn" onclick="openReviewPanel('${a.id}')">Review</button></td></tr>`;
   }).join('');
 }
 
-function reviewApp(id){
-  const a=applications.find(x=>x.id===id);if(!a)return;
-  if(confirm(`${a.id} | ${a.dev}\nMandal: ${a.mandal} | Score: ${a.score}/100\nConflicts: ${a.conflicts} | Go-To Zone: ${a.goto?'Yes':'No'}\n\nApprove this application?`))
-    alert(`✅ ${a.id} approved → routed to ${a.goto?'GREEN CHANNEL (fast-track)':'standard workflow'}.`);
+function updateStats(){
+  const counts={pending:0,approved:0,review:0,rejected:0};
+  applications.forEach(a=>counts[a.status]++);
+  document.getElementById('statTotal').textContent=applications.length;
+  document.getElementById('statPending').textContent=counts.pending;
+  document.getElementById('statApproved').textContent=counts.approved;
+  document.getElementById('statReview').textContent=counts.review;
+  document.getElementById('statRejected').textContent=counts.rejected;
 }
+
+// ═══════════ REVIEW PANEL ═══════════
+let currentReviewApp = null;
+
+function openReviewPanel(id){
+  const a = applications.find(x=>x.id===id);
+  if(!a) return;
+  currentReviewApp = a;
+
+  document.getElementById('rpAppId').textContent = a.id;
+  document.getElementById('rpDeveloper').textContent = a.dev;
+
+  // Build score data
+  const mc = mandalCenters[a.mandal] || {solar:85,grid:15,land:72,slope:88,lat:14.68,lng:77.60};
+  const solarScore = mc.solar;
+  const gridScore = Math.max(10, 100 - mc.grid*3);
+  const landScore = mc.land;
+  const accessScore = mc.slope;
+
+  const scoreColor = a.score>=80 ? 'var(--green)' : a.score>=65 ? 'var(--yellow)' : 'var(--red)';
+  const scoreLabel = a.score>=80 ? 'High Suitability' : a.score>=65 ? 'Moderate Suitability' : 'Low Suitability';
+  const scoreBadgeClass = a.score>=80 ? 'score-high' : a.score>=65 ? 'score-medium' : 'score-low';
+  const scoreBadgeText = a.score>=80 ? 'HIGH' : a.score>=65 ? 'MEDIUM' : 'LOW';
+
+  // Conflict checks
+  const inProtected = protectedAreas.some(z=>mc.lat>z[0][0]&&mc.lat<z[2][0]&&mc.lng>z[0][1]&&mc.lng<z[2][1]);
+  const nearGrid = mc.grid < 15;
+  const inGoto = gotoZones.some(z=>mc.lat>z[0][0]&&mc.lat<z[2][0]&&mc.lng>z[0][1]&&mc.lng<z[2][1]);
+
+  // SVG donut
+  const circumference = 2 * Math.PI * 42;
+  const offset = circumference - (a.score / 100) * circumference;
+
+  const body = document.getElementById('reviewBody');
+  body.innerHTML = `
+    <!-- Application Details -->
+    <div class="review-section">
+      <div class="review-section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Application Details
+      </div>
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-label">District</div>
+          <div class="detail-value">Anantapur</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Mandal</div>
+          <div class="detail-value">${a.mandal}</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Survey Number</div>
+          <div class="detail-value" style="font-family:monospace">${a.survey}</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Area</div>
+          <div class="detail-value">${a.area.toLocaleString()} acres</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Technology</div>
+          <div class="detail-value highlight">${a.tech}</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Filed Date</div>
+          <div class="detail-value">${a.filedDate || 'N/A'}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Score Breakdown -->
+    <div class="review-section">
+      <div class="review-section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg>
+        AI Suitability Score
+      </div>
+      <div class="score-donut-wrap">
+        <div class="donut-container">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--border)" stroke-width="6"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="${scoreColor}" stroke-width="6"
+              stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"
+              stroke-linecap="round" style="transition:stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1)"/>
+          </svg>
+          <div class="donut-center">
+            <div class="donut-score" style="color:${scoreColor}">${a.score}</div>
+            <div class="donut-label">out of 100</div>
+          </div>
+        </div>
+        <div class="score-bars">
+          <div class="score-bar-row">
+            <span class="score-bar-label">Solar Resource</span>
+            <div class="score-bar-track"><div class="score-bar-fill fill-yellow" style="width:${solarScore}%"></div></div>
+            <span class="score-bar-val" style="color:var(--yellow)">${solarScore}%</span>
+          </div>
+          <div class="score-bar-row">
+            <span class="score-bar-label">Grid Proximity</span>
+            <div class="score-bar-track"><div class="score-bar-fill fill-blue" style="width:${gridScore}%"></div></div>
+            <span class="score-bar-val" style="color:var(--accent)">${gridScore}%</span>
+          </div>
+          <div class="score-bar-row">
+            <span class="score-bar-label">Land Suitability</span>
+            <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:${landScore}%"></div></div>
+            <span class="score-bar-val" style="color:var(--green)">${landScore}%</span>
+          </div>
+          <div class="score-bar-row">
+            <span class="score-bar-label">Access &amp; Slope</span>
+            <div class="score-bar-track"><div class="score-bar-fill fill-orange" style="width:${accessScore}%"></div></div>
+            <span class="score-bar-val" style="color:var(--orange)">${accessScore}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parcel Location Map -->
+    <div class="review-section">
+      <div class="review-section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Parcel Location
+      </div>
+      <div class="review-map-container" id="reviewMiniMapContainer"></div>
+    </div>
+
+    <!-- Compliance Checks -->
+    <div class="review-section">
+      <div class="review-section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Compliance Checks
+      </div>
+      <div class="check-list">
+        <div class="check-item ${inProtected ? 'check-fail' : 'check-pass'}">
+          <div class="check-icon">${inProtected ? '✕' : '✓'}</div>
+          Protected area overlap: ${inProtected ? 'CONFLICT DETECTED' : 'Clear'}
+        </div>
+        <div class="check-item check-pass">
+          <div class="check-icon">✓</div>
+          Existing RE project overlap: Clear
+        </div>
+        <div class="check-item ${nearGrid ? 'check-pass' : 'check-warn'}">
+          <div class="check-icon">${nearGrid ? '✓' : '!'}</div>
+          Grid proximity (${mc.grid} km): ${nearGrid ? 'Excellent' : 'Moderate — additional infrastructure may be needed'}
+        </div>
+        <div class="check-item check-pass">
+          <div class="check-icon">✓</div>
+          Land dispute records: None found
+        </div>
+        <div class="check-item check-pass">
+          <div class="check-icon">✓</div>
+          Environmental clearance zone: Clear
+        </div>
+      </div>
+      ${a.goto ? `
+      <div class="goto-banner" style="margin-top:10px">
+        <div class="goto-banner-icon">⚡</div>
+        <div><strong>Go-To Zone:</strong> Pre-approved zone. Eligible for <strong>Green Channel fast-track</strong> approval.</div>
+      </div>` : ''}
+    </div>
+
+    <!-- Review History -->
+    <div class="review-section">
+      <div class="review-section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Review History
+      </div>
+      <div class="history-timeline">
+        ${buildHistoryTimeline(a)}
+      </div>
+    </div>
+
+    <!-- Officer Notes -->
+    <div class="review-section">
+      <div class="review-section-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Officer Notes
+      </div>
+      <div class="comment-input-wrap">
+        <textarea class="comment-input" id="commentInput" placeholder="Add a note or comment..." rows="1"></textarea>
+        <button class="comment-send" onclick="addComment()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+      <div class="comments-timeline" id="commentsTimeline">
+        ${buildComments(a)}
+      </div>
+    </div>
+  `;
+
+  // Footer actions based on status
+  const footer = document.getElementById('reviewFooter');
+  if(a.status === 'approved' || a.status === 'rejected'){
+    footer.innerHTML = `
+      <div class="review-actions">
+        <button class="btn btn-back" onclick="closeReviewPanel()">Close</button>
+        <button class="btn btn-secondary" onclick="changeStatus('${a.id}','pending')" style="margin-top:0;flex:1">Reopen as Pending</button>
+      </div>
+      <div style="text-align:center;margin-top:8px;font-size:11px;color:var(--muted)">
+        ${a.status==='approved'?'Approved':'Rejected'} by ${a.officer||'—'} on ${a.lastReview||'—'}
+      </div>`;
+  } else {
+    footer.innerHTML = `
+      <div class="review-actions">
+        <button class="btn btn-back" onclick="closeReviewPanel()">Close</button>
+        <button class="btn btn-info" onclick="changeStatus('${a.id}','review')">Request Info</button>
+        <button class="btn btn-reject" onclick="changeStatus('${a.id}','rejected')">Reject</button>
+        <button class="btn btn-approve" onclick="changeStatus('${a.id}','approved')">Approve</button>
+      </div>`;
+  }
+
+  // Open panel
+  document.getElementById('reviewOverlay').classList.add('open');
+  document.getElementById('reviewPanel').classList.add('open');
+  document.body.style.overflow='hidden';
+
+  // Init mini map after panel opens
+  setTimeout(()=>{
+    if(reviewMiniMap){reviewMiniMap.remove();reviewMiniMap=null;}
+    const container = document.getElementById('reviewMiniMapContainer');
+    if(container){
+      reviewMiniMap = L.map(container,{center:[mc.lat,mc.lng],zoom:11,zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false});
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(reviewMiniMap);
+      L.circle([mc.lat,mc.lng],{radius:6000,color:'#f97316',fillColor:'#f97316',fillOpacity:0.3,weight:2.5}).addTo(reviewMiniMap);
+      // show goto zones on mini map
+      gotoZones.forEach(c=>{
+        L.polygon(c,{color:'#22c55e',fillColor:'#22c55e',fillOpacity:0.12,weight:1.5,dashArray:'6,4'}).addTo(reviewMiniMap);
+      });
+      protectedAreas.forEach(c=>{
+        L.polygon(c,{color:'#ef4444',fillColor:'#ef4444',fillOpacity:0.1,weight:1,dashArray:'4,4'}).addTo(reviewMiniMap);
+      });
+      // Add district boundary to mini map too
+      addDistrictBoundary(reviewMiniMap);
+    }
+  }, 400);
+}
+
+function closeReviewPanel(){
+  document.getElementById('reviewOverlay').classList.remove('open');
+  document.getElementById('reviewPanel').classList.remove('open');
+  document.body.style.overflow='';
+  if(reviewMiniMap){setTimeout(()=>{reviewMiniMap.remove();reviewMiniMap=null;},400);}
+}
+
+function buildHistoryTimeline(a){
+  const entries = [];
+  entries.push({status:'submitted',label:'Application Submitted',detail:`Filed on ${a.filedDate} via online portal`,date:a.filedDate});
+
+  if(a.status==='review'||a.status==='approved'||a.status==='rejected'){
+    entries.push({status:'review',label:'Under Review',detail:`Assigned to ${a.officer||'Officer'}`,date:a.lastReview});
+  }
+  if(a.status==='approved'){
+    entries.push({status:'approved',label:'Approved',detail:`${a.goto?'Green Channel (Fast-Track)':'Standard workflow'} — by ${a.officer}`,date:a.lastReview});
+  }
+  if(a.status==='rejected'){
+    entries.push({status:'rejected',label:'Rejected',detail:`${a.conflicts} conflict(s) found — by ${a.officer}`,date:a.lastReview});
+  }
+
+  return entries.map(e=>`
+    <div class="history-entry">
+      <div class="history-dot dot-${e.status}"></div>
+      <div class="history-label">${e.label}</div>
+      <div class="history-detail">${e.detail}</div>
+    </div>
+  `).join('');
+}
+
+function buildComments(a){
+  return (a.comments||[]).map(c=>`
+    <div class="comment-entry ${c.author==='System'?'system-comment':''}">
+      <div class="comment-meta">
+        <span class="comment-author">${c.author}</span>
+        <span class="comment-time">${c.time}</span>
+      </div>
+      <div class="comment-text">${c.text}</div>
+    </div>
+  `).join('');
+}
+
+function addComment(){
+  const input = document.getElementById('commentInput');
+  const text = input.value.trim();
+  if(!text || !currentReviewApp) return;
+
+  const now = new Date();
+  const time = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  const comment = {author:'You (Officer)',text:text,time:time};
+  currentReviewApp.comments.push(comment);
+
+  const timeline = document.getElementById('commentsTimeline');
+  const div = document.createElement('div');
+  div.className = 'comment-entry';
+  div.innerHTML = `
+    <div class="comment-meta">
+      <span class="comment-author">${comment.author}</span>
+      <span class="comment-time">${comment.time}</span>
+    </div>
+    <div class="comment-text">${comment.text}</div>
+  `;
+  div.style.opacity='0';div.style.transform='translateY(10px)';
+  timeline.prepend(div);
+  requestAnimationFrame(()=>{div.style.transition='all 0.3s ease';div.style.opacity='1';div.style.transform='translateY(0)';});
+
+  input.value='';
+  showToast('Note added successfully.','success');
+}
+
+function changeStatus(id, newStatus){
+  const a = applications.find(x=>x.id===id);
+  if(!a) return;
+
+  const oldStatus = a.status;
+  a.status = newStatus;
+
+  const now = new Date();
+  const time = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  a.lastReview = now.toISOString().split('T')[0];
+  a.officer = a.officer || 'You (Officer)';
+
+  const statusMessages = {
+    approved: `Application approved${a.goto?' — routed to Green Channel (fast-track)':' — routed to standard workflow'}.`,
+    rejected: 'Application rejected due to compliance concerns.',
+    review: 'Additional information requested from developer.',
+    pending: `Application reopened as pending (was ${oldStatus}).`
+  };
+  a.comments.push({author:'You (Officer)',text:statusMessages[newStatus],time:time});
+
+  // Update table
+  populateOfficerTable();
+  updateStats();
+
+  // Flash the updated row
+  const row = document.getElementById('row-'+id);
+  if(row) row.classList.add('row-updated');
+
+  // Close panel and show toast
+  closeReviewPanel();
+
+  const toastMessages = {
+    approved: `${a.id} approved successfully.`,
+    rejected: `${a.id} has been rejected.`,
+    review: `${a.id} — additional info requested.`,
+    pending: `${a.id} reopened as pending.`
+  };
+  const toastType = newStatus==='approved'?'success':newStatus==='rejected'?'error':'warning';
+  showToast(toastMessages[newStatus], toastType);
+}
+
+// ═══════════ TOAST ═══════════
+function showToast(msg, type='success'){
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = `toast toast-${type} show`;
+  setTimeout(()=>toast.classList.remove('show'), 3000);
+}
+
+// Close panel on Escape
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') closeReviewPanel();
+});
 </script>
 </body>
 </html>
