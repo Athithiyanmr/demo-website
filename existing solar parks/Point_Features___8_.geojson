@@ -1,0 +1,15 @@
+{
+"type": "FeatureCollection",
+"name": "Point_Features___8_",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "HT LINE", "description": "HT Lines", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.9258394, 16.009192325, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "HT LINE", "description": "HT Lines", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.922854854, 15.993455618, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "CUBE INDIA PAPER\nMILLS PVT LTD", "description": "CUBE_INDIA_PAPER_MILLS_PVT_LTD", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.939002555, 15.991926263, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "CUBE INDIA PAPER\nMILLS PVT LTD", "description": "CUBE_INDIA_PAPER_MILLS_PVT_LTD", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.939002555, 15.991926263, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "S.L.GUDIPADU", "description": "Kommala_Padu", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.938066722, 15.988601066, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "KUNDURU EAST", "description": "Kommala_Padu", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.934415228, 16.009340546, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "MUKTESWARAM", "description": "Kommala_Padu", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.94446517, 16.003577597, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "RENEWABLE ENERGY MANUFACTURING\nZONE (REMZ)", "description": "0", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.925649307, 16.004881509, 0.0 ] } }
+]
+}

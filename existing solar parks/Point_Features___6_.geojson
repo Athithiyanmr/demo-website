@@ -1,0 +1,13 @@
+{
+"type": "FeatureCollection",
+"name": "Point_Features___6_",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "KOCHERLA\nKOTA", "description": "Kocherla_Kota", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.342681056, 15.802417761, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "RUDRA\nSAMUDRAM", "description": "Kocherla_Kota", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.41567187, 15.831192551, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "BHUMANAPALLI", "description": "Kocherla_Kota", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.409419487, 15.821656327, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "MALLEMPETA", "description": "Kocherla_Kota", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.394272109, 15.823385563, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "RUDRA SAMUDRA ULTRA MEGA SOLAR PARK", "description": "0", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.381399036, 15.837551917, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "RUDRA SAMUDRA\nULTRA MEGA SOLAR\nPARK", "description": "0", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 79.334858759, 15.797670861, 0.0 ] } }
+]
+}

@@ -1,0 +1,9 @@
+{
+"type": "FeatureCollection",
+"name": "1___32_",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "1", "description": null, "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": 1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 77.366114131474433, 14.50017987136847, 0.0 ], [ 77.36624413898609, 14.50250450826824, 0.0 ], [ 77.382076742052519, 14.50233756703193, 0.0 ], [ 77.385691797690029, 14.55738418180864, 0.0 ], [ 77.342905983797309, 14.560281613442401, 0.0 ], [ 77.342161965024161, 14.57487545377538, 0.0 ], [ 77.245239178926582, 14.577344969336041, 0.0 ], [ 77.236467790898189, 14.54461295583191, 0.0 ], [ 77.263766755313725, 14.524281318447411, 0.0 ], [ 77.263787296614368, 14.51286780529189, 0.0 ], [ 77.252634257289202, 14.51032597426437, 0.0 ], [ 77.253215135243551, 14.49983856325764, 0.0 ], [ 77.366114131474433, 14.50017987136847, 0.0 ] ] ] } },
+{ "type": "Feature", "properties": { "Name": "1", "description": null, "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 77.282985626146655, 14.522029443089851, 0.0 ] } }
+]
+}

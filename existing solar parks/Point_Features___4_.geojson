@@ -1,0 +1,17 @@
+{
+"type": "FeatureCollection",
+"name": "Point_Features___4_",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "ERRAGUDI", "description": "Erragudi Sy No", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 78.208280922, 14.968944088, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "MURAPANDI", "description": "Murapandi Sy No", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 78.194417169, 14.95346514, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "DHANNA VADA", "description": "Erragudi Sy No", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 78.23072757, 14.956659331, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "MADHAVA PURAM", "description": "Vaddirala Sy No", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 78.295247496, 14.953910781, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "NAKKAVANDLA\nPALLI", "description": "Erragudi Sy No", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 78.208498201, 14.945257114, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "GOLLA UPPALAPADU", "description": "Erragudi Sy No", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 78.264098041, 14.954196745, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "VADDIRALA", "description": "Erragudi Sy No", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 78.254243222, 14.960555758, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "GOLLAPALLI", "description": "Erragudi Sy No", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 78.261570192, 14.953094355, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "GOLLAPALLI", "description": "Erragudi Sy No", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 78.270653824, 14.966504052, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "GOLLA UPPALAPADU", "description": "Erragudi Sy No", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 78.272154171, 14.962533872, 0.0 ] } }
+]
+}

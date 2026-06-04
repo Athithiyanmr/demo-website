@@ -1,0 +1,9 @@
+{
+"type": "FeatureCollection",
+"name": "Point_Features___2_",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "ANANTHAPURAM\nULTRA MEGA SOLAR PARK II\nAdditional (100 MW)", "description": "Government Land", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 78.076080375, 14.952868957, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "ANANTHAPURAM\nULTRA MEGA SOLAR PARK II\nAdditional (100 MW)", "description": "Government Land", "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 78.08074276, 14.969780101, 0.0 ] } }
+]
+}
